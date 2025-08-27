@@ -2,11 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>//localhost:1313/categories/</loc>
-    <lastmod>2025-08-27T15:53:23+09:00</lastmod>
-  </url><url>
     <loc>//localhost:1313/posts/</loc>
-    <lastmod>2025-08-27T15:53:23+09:00</lastmod>
+    <lastmod>2025-08-27T19:00:00+09:00</lastmod>
+  </url><url>
+    <loc>//localhost:1313/posts/app-privacy/</loc>
+    <lastmod>2025-08-27T19:00:00+09:00</lastmod>
+  </url><url>
+    <loc>//localhost:1313/posts/power-alert-privacy-policy-clean/</loc>
+    <lastmod>2025-08-27T19:00:00+09:00</lastmod>
+  </url><url>
+    <loc>//localhost:1313/posts/power-alert-privacy/</loc>
+    <lastmod>2025-08-27T19:00:00+09:00</lastmod>
+  </url><url>
+    <loc>//localhost:1313/posts/power-alert/</loc>
+    <lastmod>2025-08-27T19:00:00+09:00</lastmod>
   </url><url>
     <loc>//localhost:1313/posts/power-alert-privacy-policy/</loc>
     <lastmod>2025-08-27T15:53:23+09:00</lastmod>
@@ -285,6 +294,9 @@
     <lastmod>2024-01-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>//localhost:1313/posts/RA8491_Sec50/</loc>
+    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>//localhost:1313/categories/</loc>
     <lastmod>2024-01-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>//localhost:1313/posts/%E3%82%BF%E3%82%AC%E3%83%AD%E3%82%B0%E3%83%A1%E3%83%A2/</loc>
