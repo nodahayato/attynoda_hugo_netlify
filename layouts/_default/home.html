@@ -1,0 +1,10 @@
+{{/* Home page: show full page content */}}
+{{ define "main" }}
+<article class="markdown book-post">
+  {{/* Title comes from front matter of content/_index.md */}}
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</article>
+{{ end }}
+
+

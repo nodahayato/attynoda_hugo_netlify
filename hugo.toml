@@ -1,0 +1,143 @@
+baseURL = '/'
+languageCode = 'ja'
+title = '弁護士　野田隼人'
+defaultContentLanguage = 'ja'
+defaultContentLanguageInSubdir = false
+
+# 相対URLを使用して内部リンクを正しく動作させる
+canonifyURLs = false
+uglyURLs = false
+
+# 内部リンクを相対URLで生成
+disablePathToLower = true
+
+theme = 'hugo-book'
+
+[taxonomies]
+  category = 'categories'
+
+[pagination]
+  pagerSize = 10
+
+[params]
+  BookToC = true
+  BookSearch = true
+  BookComments = true
+  BookRepo = ""
+  BookEditPath = ""
+  BookMenuBundle = "/menu"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.tableOfContents]
+    startLevel = 1
+    endLevel = 4
+
+# 環境別設定（開発では絶対URLを無効化）
+[environments]
+  [environments.development]
+    baseURL = 'http://localhost:1313/'
+    canonifyURLs = false
+  [environments.production]
+    baseURL = 'https://attynoda.com/'
+    canonifyURLs = true
+
+[menu]
+  [[menu.before]]
+    identifier = "categories"
+    name = "カテゴリ"
+    url = "/categories/"
+    weight = 10
+
+  [[menu.before]]
+    identifier = "philippine-law"
+    name = "フィリピン法に関する情報"
+    url = "/categories/フィリピン法に関する情報/"
+    weight = 20
+    parent = "categories"
+
+  [[menu.before]]
+    identifier = "philippine-law-laws"
+    name = "フィリピンの法令"
+    url = "/categories/フィリピン法に関する情報/フィリピンの法令/"
+    weight = 21
+    parent = "philippine-law"
+
+  [[menu.before]]
+    identifier = "philippine-law-memo"
+    name = "フィリピン法メモ"
+    url = "/categories/フィリピン法に関する情報/フィリピン法メモ/"
+    weight = 22
+    parent = "philippine-law"
+
+  [[menu.before]]
+    identifier = "philippine-law-cases"
+    name = "フィリピンの裁判例"
+    url = "/categories/フィリピン法に関する情報/フィリピンの裁判例/"
+    weight = 23
+    parent = "philippine-law"
+
+  [[menu.before]]
+    identifier = "philippine-general"
+    name = "フィリピン一般"
+    url = "/categories/フィリピン一般/"
+    weight = 30
+    parent = "categories"
+
+  [[menu.before]]
+    identifier = "japan"
+    name = "日本法に関する情報"
+    url = "/categories/日本法に関する情報/"
+    weight = 40
+    parent = "categories"
+
+  [[menu.before]]
+    identifier = "japan-laws"
+    name = "日本の法令"
+    url = "/categories/日本法に関する情報/日本の法令/"
+    weight = 41
+    parent = "japan"
+
+  [[menu.before]]
+    identifier = "japan-memo"
+    name = "日本法メモ"
+    url = "/categories/日本法に関する情報/日本法メモ/"
+    weight = 42
+    parent = "japan"
+
+  [[menu.before]]
+    identifier = "japan-cases"
+    name = "日本の裁判例"
+    url = "/categories/日本法に関する情報/日本の裁判例/"
+    weight = 43
+    parent = "japan"
+
+  [[menu.before]]
+    identifier = "inheritance"
+    name = "相続手続"
+    url = "/categories/相続手続/"
+    weight = 50
+    parent = "categories"
+
+  [[menu.before]]
+    identifier = "criminal-defense"
+    name = "刑事弁護"
+    url = "/categories/刑事弁護/"
+    weight = 60
+    parent = "categories"
+
+  [[menu.before]]
+    identifier = "misc"
+    name = "雑記"
+    url = "/categories/雑記/"
+    weight = 70
+    parent = "categories"
+
+  [[menu.before]]
+    identifier = "apps"
+    name = "app"
+    url = "/categories/app/"
+    weight = 80
+    parent = "categories"

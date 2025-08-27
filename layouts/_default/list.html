@@ -1,0 +1,25 @@
+{{/* Override list pages (sections, taxonomy terms fallback) to show title + summary only */}}
+{{ define "main" }}
+<article class="markdown book-post">
+  <h1>{{ .Title }}</h1>
+
+  {{/* Optional description content for the list page itself (kept brief if provided) */}}
+  {{ with .Params.description }}
+    <p>{{ . }}</p>
+  {{ end }}
+
+  {{ $paginator := .Paginate (.Pages) }}
+  {{ range $paginator.Pages }}
+    <section class="summary">
+      <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+      {{ with .Date }}<span class="text-small">{{ .Format "2006-01-02" }}</span>{{ end }}
+      <p>{{ .Summary | plainify | truncate 180 }}</p>
+      <p><a href="{{ .RelPermalink }}">続きを読む</a></p>
+    </section>
+  {{ end }}
+
+  {{ template "_internal/pagination.html" . }}
+</article>
+{{ end }}
+
+

@@ -1,0 +1,15 @@
+{
+  "name": "弁護士　野田隼人",
+  "short_name": "弁護士　野田隼人",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "512x512"
+    }
+  ]
+}
