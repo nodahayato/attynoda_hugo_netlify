@@ -28,6 +28,12 @@
   status = 301
   force = true
 
+# フィリピン法ノートの記事リダイレクト
+[[redirects]]
+  from = "/フィリピン法ノート/フィリピン市民権の取得による日本国籍の喪失"
+  to = "/posts/フィリピン市民権の取得による日本国籍の喪失"
+  status = 301
+
 [[headers]]
   for = "/*"
   [headers.values]
