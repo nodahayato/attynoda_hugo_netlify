@@ -1,0 +1,18 @@
+<div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="{{ "svg/menu.svg" | relURL }}" class="book-icon" alt="Menu" />
+  </label>
+
+  <div class="book-header-content">
+    <div class="book-header-site-title">
+      <a href="{{ "/" | relURL }}">{{ .Site.Title }}</a>
+    </div>
+    <h3>{{ partial "docs/title" . }}</h3>
+  </div>
+
+  <label for="toc-control">
+    {{ if partial "docs/toc-show" . }}
+    <img src="{{ "svg/toc.svg" | relURL }}" class="book-icon" alt="Table of Contents" />
+    {{ end }}
+  </label>
+</div>

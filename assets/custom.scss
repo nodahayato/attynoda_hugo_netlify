@@ -1,0 +1,28 @@
+// スマホ表示時のヘッダーを2行構成にする
+@media screen and (max-width: 768px) {
+  .book-header {
+    .book-header-content {
+      flex: 1;
+      text-align: center;
+      min-width: 0; // テキストの省略を有効にする
+    }
+    
+    .book-header-site-title {
+      font-size: 0.8em;
+      color: var(--color-link);
+      margin-bottom: 0.25em;
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    h3 {
+      margin: 0;
+      font-size: 1em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
