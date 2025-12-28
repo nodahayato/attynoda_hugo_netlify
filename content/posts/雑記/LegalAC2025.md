@@ -9,4 +9,4 @@ aliases: ["/posts/ai/LegalAC2025"]
 
 新しいアドレス: [/posts/ai/LegalAC2025](/posts/ai/LegalAC2025)
 
-しばらくすると自動的にリダイレクトされます。
+上記のリンクから新しいアドレスにアクセスしてください。
