@@ -141,3 +141,10 @@ theme = 'hugo-book'
     url = "/categories/app/"
     weight = 80
     parent = "categories"
+
+  [[menu.before]]
+    identifier = "ai"
+    name = "AI"
+    url = "/categories/AI/"
+    weight = 90
+    parent = "categories"
