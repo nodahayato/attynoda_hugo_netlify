@@ -2,6 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>/posts/</loc>
+    <lastmod>2026-01-13T00:00:00+09:00</lastmod>
+  </url><url>
+    <loc>/posts/%E8%AA%AD%E6%9B%B8%E8%A6%96%E8%81%B4%E3%83%A1%E3%83%A2/20260113%E6%9C%88100%E4%B8%87%E5%86%86%E7%A8%BC%E3%81%90%E3%83%95%E3%83%BC%E3%83%89%E3%83%87%E3%83%AA%E3%83%90%E3%83%AA%E3%83%BC%E9%85%8D%E9%81%94%E5%93%A1%E3%81%AB%E4%BB%8A%E3%81%8B%E3%82%89%E9%85%8D%E9%81%94%E5%93%A1%E5%A7%8B%E3%82%81%E3%81%A6%E3%82%82%E7%A8%BC%E3%81%92%E3%82%8B%E3%81%AE%E3%81%8B%E8%81%9E%E3%81%84%E3%81%A6%E3%81%BF%E3%81%9F/</loc>
+    <lastmod>2026-01-13T00:00:00+09:00</lastmod>
+  </url><url>
+    <loc>/posts/%E8%AA%AD%E6%9B%B8%E8%A6%96%E8%81%B4%E3%83%A1%E3%83%A2/20260112YouTube-2026%E5%B9%B4%E3%81%AEAI%E6%AD%A3%E8%A7%A3%E3%82%B9%E3%82%BF%E3%83%83%E3%82%AF/</loc>
+    <lastmod>2026-01-12T00:00:00+09:00</lastmod>
+  </url><url>
+    <loc>/posts/ai/%E7%94%9F%E6%88%90AI%E3%81%AE%E6%A9%9F%E8%83%BD%E6%AF%94%E8%BC%83/</loc>
+    <lastmod>2026-01-12T00:00:00+09:00</lastmod>
+  </url><url>
     <loc>/categories/AI/</loc>
     <lastmod>2025-12-22T08:56:00+09:00</lastmod>
   </url><url>
@@ -11,10 +23,10 @@
     <loc>/posts/ai/LegalAC2025/</loc>
     <lastmod>2025-12-22T00:00:00+09:00</lastmod>
   </url><url>
-    <loc>/posts/</loc>
+    <loc>/posts/%E9%9B%91%E8%A8%98/LegalAC2025/</loc>
     <lastmod>2025-12-22T00:00:00+09:00</lastmod>
   </url><url>
-    <loc>/posts/%E9%9B%91%E8%A8%98/LegalAC2025/</loc>
+    <loc>/categories/%E8%AA%AD%E6%9B%B8%E8%A6%96%E8%81%B4%E3%83%A1%E3%83%A2/</loc>
     <lastmod>2025-12-22T00:00:00+09:00</lastmod>
   </url><url>
     <loc>/posts/%E9%9B%91%E8%A8%98/%E5%A4%A7%E6%B4%A5%E5%9C%B0%E8%A3%81%E6%9C%AC%E5%BA%81%E3%81%8B%E3%82%89%E5%BD%A6%E6%A0%B9%E6%94%AF%E9%83%A8%E3%81%AE%E7%A7%BB%E5%8B%95/</loc>

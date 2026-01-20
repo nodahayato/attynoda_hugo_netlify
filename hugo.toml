@@ -148,3 +148,10 @@ theme = 'hugo-book'
     url = "/categories/AI/"
     weight = 90
     parent = "categories"
+
+  [[menu.before]]
+    identifier = "reading-watching"
+    name = "読書視聴メモ"
+    url = "/categories/読書視聴メモ/"
+    weight = 100
+    parent = "categories"
