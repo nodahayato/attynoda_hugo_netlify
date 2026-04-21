@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="個人開発者のためのインフラと技術のスタック">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="/posts/ai/%E5%80%8B%E4%BA%BA%E9%96%8B%E7%99%BA%E8%80%85%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AE%E6%8A%80%E8%A1%93%E3%82%B9%E3%82%BF%E3%83%83%E3%82%AF/">
+  <meta property="og:site_name" content="Knowlegdebase of 弁護士 野田隼人">
+  <meta property="og:title" content="個人開発者のためのインフラと技術のスタック">
+  <meta property="og:description" content="個人開発者のためのインフラと技術のスタック # インフラスタック # Infrastructure
+Cloudflare Workers — エッジでのサーバーレス実行。イベント駆動で常時起動不要
+無料枠: 1日10万リクエスト、CPU時間10ms/リクエスト https://workers.cloudflare.com Cloudflare R2 — S3互換オブジェクトストレージ。エグレス（データ転送）料金が完全無料
+無料枠: 10GBストレージ、Class A 100万ops/月、Class B 1000万ops/月 https://www.cloudflare.com/developer-platform/products/r2/ Cloudflare D1 — Workers上のサーバーレスSQLiteデータベース。クエリがなければ課金なし（scale-to-zero）
+無料枠: 500万rows read/日、10万rows written/日、5GBストレージ https://developers.cloudflare.com/d1/ Turso — libSQL（SQLite fork）ベースのエッジDB。グローバルレプリケーション対応
+無料枠: 500万rows read/月、1000万rows written/月、5GBストレージ https://turso.tech Cloudflare Queues — Workers上のメッセージキュー。2026年2月に無料プランに追加された
+無料枠: 1日1万オペレーション、最大1万キュー（保持期間は無料枠24時間） https://developers.cloudflare.com/queues/ メール
+Resend — 開発者向けメール送信API。React Emailとの統合やWebhookに対応
+無料枠: 月3,000通（1日100通上限） https://resend.com Cloudflare Email Routing — 独自ドメインのメール転送。受信メールを任意のアドレスやWorkerにルーティング
+無料枠: Cloudflareの無料プランに含まれる（追加料金なし） https://developers.cloudflare.com/email-routing/ 認証
+Better Auth — TypeScript向けのフレームワーク非依存な認証・認可フレームワーク。OSSなので料金は発生しない メール/パスワード認証、ソーシャルログイン、2FA、パスキー、マルチテナンシー、SSO/SAML等を標準搭載。プラグインエコシステムで拡張可能 https://better-auth.com 技術スタック # フレームワーク">
+  <meta property="og:locale" content="ja">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-03-04T00:00:00+09:00">
+    <meta property="article:modified_time" content="2026-03-04T00:00:00+09:00">
+<title>個人開発者のためのインフラと技術のスタック | Knowlegdebase of 弁護士 野田隼人</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="/posts/ai/%E5%80%8B%E4%BA%BA%E9%96%8B%E7%99%BA%E8%80%85%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AE%E6%8A%80%E8%A1%93%E3%82%B9%E3%82%BF%E3%83%83%E3%82%AF/">
+<link rel="stylesheet" href="/book.min.bad7fde131c1ff4f3079703b4cc8e1c8fbdd92ecee65a2dc19b7572d2bf6ec8b.css" >
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/ja.search.min.66f033ac8e3ef71030409eb3795e3f8bce487aa76bd68a6600263afb4297c958.js" ></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-posts">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Knowlegdebase of 弁護士 野田隼人</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input type="text" id="book-search-input" placeholder="検索" aria-label="検索" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/categories/" >
+        カテゴリ
+      </a>
+      
+<ul>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/" >
+        フィリピン法に関する情報
+      </a>
+      
+<ul>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E3%81%AE%E6%B3%95%E4%BB%A4/" >
+        フィリピンの法令
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%83%A1%E3%83%A2/" >
+        フィリピン法メモ
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E3%81%AE%E8%A3%81%E5%88%A4%E4%BE%8B/" >
+        フィリピンの裁判例
+      </a>
+  </li>
+  
+</ul>
+
+  </li>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E4%B8%80%E8%88%AC/" >
+        フィリピン一般
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/" >
+        日本法に関する情報
+      </a>
+      
+<ul>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E6%97%A5%E6%9C%AC%E3%81%AE%E6%B3%95%E4%BB%A4/" >
+        日本の法令
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%83%A1%E3%83%A2/" >
+        日本法メモ
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E6%97%A5%E6%9C%AC%E3%81%AE%E8%A3%81%E5%88%A4%E4%BE%8B/" >
+        日本の裁判例
+      </a>
+  </li>
+  
+</ul>
+
+  </li>
+  
+  <li>
+    <a href="/categories/%E7%9B%B8%E7%B6%9A%E6%89%8B%E7%B6%9A/" >
+        相続手続
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E5%88%91%E4%BA%8B%E5%BC%81%E8%AD%B7/" >
+        刑事弁護
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E9%9B%91%E8%A8%98/" >
+        雑記
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/app/" >
+        app
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/AI/" >
+        AI
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E8%AA%AD%E6%9B%B8%E8%A6%96%E8%81%B4%E3%83%A1%E3%83%A2/" >
+        読書視聴メモ
+      </a>
+  </li>
+  
+</ul>
+
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <div class="book-header-content">
+    <div class="book-header-site-title">
+      <a href="/">Knowlegdebase of 弁護士 野田隼人</a>
+    </div>
+    <h3>個人開発者のためのインフラと技術のスタック</h3>
+  </div>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#個人開発者のためのインフラと技術のスタック">個人開発者のためのインフラと技術のスタック</a>
+      <ul>
+        <li><a href="#インフラスタック">インフラスタック</a></li>
+        <li><a href="#技術スタック">技術スタック</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+<article class="markdown book-post">
+  <h1>
+    個人開発者のためのインフラと技術のスタック
+  </h1>
+  
+  <div class="flex align-center text-small book-post-date">
+    <img src="/svg/calendar.svg" class="book-icon " alt="" />
+    <span>3月 4, 2026</span>
+  </div>
+
+
+
+  
+  <div class="text-small">
+    
+      <a href="/categories/AI/">AI</a>
+  </div>
+  
+
+
+  <div class="book-post-content"><h1 id="個人開発者のためのインフラと技術のスタック">
+  個人開発者のためのインフラと技術のスタック
+  
+  <a class="anchor" href="#%e5%80%8b%e4%ba%ba%e9%96%8b%e7%99%ba%e8%80%85%e3%81%ae%e3%81%9f%e3%82%81%e3%81%ae%e3%82%a4%e3%83%b3%e3%83%95%e3%83%a9%e3%81%a8%e6%8a%80%e8%a1%93%e3%81%ae%e3%82%b9%e3%82%bf%e3%83%83%e3%82%af">#</a>
+  
+</h1>
+<h2 id="インフラスタック">
+  インフラスタック
+  
+  <a class="anchor" href="#%e3%82%a4%e3%83%b3%e3%83%95%e3%83%a9%e3%82%b9%e3%82%bf%e3%83%83%e3%82%af">#</a>
+  
+</h2>
+<p><strong>Infrastructure</strong></p>
+<ul>
+<li>
+<p><strong>Cloudflare Workers</strong> — エッジでのサーバーレス実行。イベント駆動で常時起動不要</p>
+<ul>
+<li>無料枠: 1日10万リクエスト、CPU時間10ms/リクエスト</li>
+<li><a href="https://workers.cloudflare.com">https://workers.cloudflare.com</a></li>
+</ul>
+</li>
+<li>
+<p><strong>Cloudflare R2</strong> — S3互換オブジェクトストレージ。エグレス（データ転送）料金が完全無料</p>
+<ul>
+<li>無料枠: 10GBストレージ、Class A 100万ops/月、Class B 1000万ops/月</li>
+<li><a href="https://www.cloudflare.com/developer-platform/products/r2/">https://www.cloudflare.com/developer-platform/products/r2/</a></li>
+</ul>
+</li>
+<li>
+<p><strong>Cloudflare D1</strong> — Workers上のサーバーレスSQLiteデータベース。クエリがなければ課金なし（scale-to-zero）</p>
+<ul>
+<li>無料枠: 500万rows read/日、10万rows written/日、5GBストレージ</li>
+<li><a href="https://developers.cloudflare.com/d1/">https://developers.cloudflare.com/d1/</a></li>
+</ul>
+</li>
+<li>
+<p><strong>Turso</strong> — libSQL（SQLite fork）ベースのエッジDB。グローバルレプリケーション対応</p>
+<ul>
+<li>無料枠: 500万rows read/月、1000万rows written/月、5GBストレージ</li>
+<li><a href="https://turso.tech">https://turso.tech</a></li>
+</ul>
+</li>
+<li>
+<p><strong>Cloudflare Queues</strong> — Workers上のメッセージキュー。2026年2月に無料プランに追加された</p>
+<ul>
+<li>無料枠: 1日1万オペレーション、最大1万キュー（保持期間は無料枠24時間）</li>
+<li><a href="https://developers.cloudflare.com/queues/">https://developers.cloudflare.com/queues/</a></li>
+</ul>
+</li>
+</ul>
+<p><strong>メール</strong></p>
+<ul>
+<li>
+<p><strong>Resend</strong> — 開発者向けメール送信API。React Emailとの統合やWebhookに対応</p>
+<ul>
+<li>無料枠: 月3,000通（1日100通上限）</li>
+<li><a href="https://resend.com">https://resend.com</a></li>
+</ul>
+</li>
+<li>
+<p><strong>Cloudflare Email Routing</strong> — 独自ドメインのメール転送。受信メールを任意のアドレスやWorkerにルーティング</p>
+<ul>
+<li>無料枠: Cloudflareの無料プランに含まれる（追加料金なし）</li>
+<li><a href="https://developers.cloudflare.com/email-routing/">https://developers.cloudflare.com/email-routing/</a></li>
+</ul>
+</li>
+</ul>
+<p><strong>認証</strong></p>
+<ul>
+<li><strong>Better Auth</strong> — TypeScript向けのフレームワーク非依存な認証・認可フレームワーク。OSSなので料金は発生しない
+<ul>
+<li>メール/パスワード認証、ソーシャルログイン、2FA、パスキー、マルチテナンシー、SSO/SAML等を標準搭載。プラグインエコシステムで拡張可能</li>
+<li><a href="https://better-auth.com">https://better-auth.com</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="技術スタック">
+  技術スタック
+  
+  <a class="anchor" href="#%e6%8a%80%e8%a1%93%e3%82%b9%e3%82%bf%e3%83%83%e3%82%af">#</a>
+  
+</h2>
+<p><strong>フレームワーク</strong></p>
+<ul>
+<li><strong>Hono</strong> — Workers上でネイティブ動作する軽量フレームワーク。API・SSR両対応。日本人作者
+<ul>
+<li>OSS（無料）</li>
+<li><a href="https://hono.dev">https://hono.dev</a></li>
+</ul>
+</li>
+</ul>
+<p><strong>ORM</strong></p>
+<ul>
+<li><strong>Drizzle ORM</strong> — D1・Turso両対応の型安全ORM。スキーマからのマイグレーション自動生成
+<ul>
+<li>OSS（無料）</li>
+<li><a href="https://orm.drizzle.team">https://orm.drizzle.team</a></li>
+</ul>
+</li>
+</ul>
+<p><strong>フロントエンド / スタイリング</strong></p>
+<ul>
+<li><strong>React</strong> + <strong>Vite</strong> — Cloudflare Pagesでホスト。HonoのJSXでSSRも可
+<ul>
+<li>OSS（無料）</li>
+<li><a href="https://vite.dev">https://vite.dev</a></li>
+</ul>
+</li>
+<li><strong>Tailwind CSS</strong> — ユーティリティファーストCSS。AIによるコード生成との親和性が高い
+<ul>
+<li>OSS（無料）</li>
+<li><a href="https://tailwindcss.com">https://tailwindcss.com</a></li>
+</ul>
+</li>
+</ul>
+<p><strong>バリデーション</strong></p>
+<ul>
+<li><strong>Zod</strong> — TypeScriptファーストのスキーマバリデーション。フロント・バック共用可
+<ul>
+<li>OSS（無料）</li>
+<li><a href="https://zod.dev">https://zod.dev</a></li>
+</ul>
+</li>
+</ul>
+<p><strong>認証</strong></p>
+<ul>
+<li><strong>Better Auth</strong> — 前述のとおり
+<ul>
+<li>OSS（無料）</li>
+<li><a href="https://better-auth.com">https://better-auth.com</a></li>
+</ul>
+</li>
+</ul>
+<p><strong>言語</strong></p>
+<ul>
+<li><strong>TypeScript</strong> — 全レイヤー統一。型によりAIの生成精度が上がる
+<ul>
+<li>OSS（無料）</li>
+<li><a href="https://www.typescriptlang.org">https://www.typescriptlang.org</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+
+<aside class="book-toc">
+  <div class="book-toc-content">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#個人開発者のためのインフラと技術のスタック">個人開発者のためのインフラと技術のスタック</a>
+      <ul>
+        <li><a href="#インフラスタック">インフラスタック</a></li>
+        <li><a href="#技術スタック">技術スタック</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </div>
+</aside>
+
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

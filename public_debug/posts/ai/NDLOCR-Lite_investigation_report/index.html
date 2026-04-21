@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="NDLOCR-Lite ローカル完結性調査レポート">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="/posts/ai/NDLOCR-Lite_investigation_report/">
+  <meta property="og:site_name" content="Knowlegdebase of 弁護士 野田隼人">
+  <meta property="og:title" content="NDLOCR-Lite ローカル完結性調査レポート">
+  <meta property="og:description" content="NDLOCR-Lite ローカル完結性調査レポート # 調査日時: 2026-02-26 10:55 調査担当: 秘書1 ひなた 対象リポジトリ: https://github.com/ndl-lab/ndlocr-lite
+📊 調査結果サマリー # ローカルで完結しているか # ✅ Yes — 完全にローカルで完結
+NDLOCR-Liteは、一度インストール・セットアップが完了すれば、完全オフライン環境で動作します。
+🔍 リポジトリの概要・目的 # プロジェクト概要 # NDLOCR-Liteは、国立国会図書館デジタル化資料送信サービスラボ（NDL Lab）が開発した軽量なOCRアプリケーションです。
+主な特徴:
+GPU不要で動作（一般的なノートPC環境で利用可能） 書籍・雑誌等のデジタル化資料を文字データに変換 日本語縦書き、横書き、英語活字、手書き文字に対応（試験的） 開発元: 国立国会図書館デジタル化資料送信サービスラボ（NDL Lab）
+ライセンス: CC BY 4.0
+リリース日: 2026年2月24日（最新版: v1.1.0, 2026年2月25日）
+技術構成 # 3つのコア機能:
+レイアウト認識: DEIMv2モデル使用 文字列認識: PARSeqモデル使用 読み順整列: NDLOCR本家と同じモジュール 対応プラットフォーム:
+Windows 11 macOS（Apple M4、macOS Sequoia / Intel Mac対応） Linux（Ubuntu 22.04） 対応入力形式: JPG, JPEG, PNG, TIFF, TIF, JP2, BMP">
+  <meta property="og:locale" content="ja">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-26T10:55:00+09:00">
+    <meta property="article:modified_time" content="2026-02-26T10:55:00+09:00">
+<title>NDLOCR-Lite ローカル完結性調査レポート | Knowlegdebase of 弁護士 野田隼人</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="/posts/ai/NDLOCR-Lite_investigation_report/">
+<link rel="stylesheet" href="/book.min.bad7fde131c1ff4f3079703b4cc8e1c8fbdd92ecee65a2dc19b7572d2bf6ec8b.css" >
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/ja.search.min.66f033ac8e3ef71030409eb3795e3f8bce487aa76bd68a6600263afb4297c958.js" ></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-posts">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Knowlegdebase of 弁護士 野田隼人</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input type="text" id="book-search-input" placeholder="検索" aria-label="検索" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/categories/" >
+        カテゴリ
+      </a>
+      
+<ul>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/" >
+        フィリピン法に関する情報
+      </a>
+      
+<ul>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E3%81%AE%E6%B3%95%E4%BB%A4/" >
+        フィリピンの法令
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%83%A1%E3%83%A2/" >
+        フィリピン法メモ
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E3%81%AE%E8%A3%81%E5%88%A4%E4%BE%8B/" >
+        フィリピンの裁判例
+      </a>
+  </li>
+  
+</ul>
+
+  </li>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E4%B8%80%E8%88%AC/" >
+        フィリピン一般
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/" >
+        日本法に関する情報
+      </a>
+      
+<ul>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E6%97%A5%E6%9C%AC%E3%81%AE%E6%B3%95%E4%BB%A4/" >
+        日本の法令
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%83%A1%E3%83%A2/" >
+        日本法メモ
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E6%97%A5%E6%9C%AC%E3%81%AE%E8%A3%81%E5%88%A4%E4%BE%8B/" >
+        日本の裁判例
+      </a>
+  </li>
+  
+</ul>
+
+  </li>
+  
+  <li>
+    <a href="/categories/%E7%9B%B8%E7%B6%9A%E6%89%8B%E7%B6%9A/" >
+        相続手続
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E5%88%91%E4%BA%8B%E5%BC%81%E8%AD%B7/" >
+        刑事弁護
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E9%9B%91%E8%A8%98/" >
+        雑記
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/app/" >
+        app
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/AI/" >
+        AI
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E8%AA%AD%E6%9B%B8%E8%A6%96%E8%81%B4%E3%83%A1%E3%83%A2/" >
+        読書視聴メモ
+      </a>
+  </li>
+  
+</ul>
+
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <div class="book-header-content">
+    <div class="book-header-site-title">
+      <a href="/">Knowlegdebase of 弁護士 野田隼人</a>
+    </div>
+    <h3>NDLOCR-Lite ローカル完結性調査レポート</h3>
+  </div>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#ndlocr-lite-ローカル完結性調査レポート">NDLOCR-Lite ローカル完結性調査レポート</a>
+      <ul>
+        <li><a href="#-調査結果サマリー">📊 調査結果サマリー</a>
+          <ul>
+            <li><a href="#ローカルで完結しているか">ローカルで完結しているか</a></li>
+          </ul>
+        </li>
+        <li><a href="#-リポジトリの概要目的">🔍 リポジトリの概要・目的</a>
+          <ul>
+            <li><a href="#プロジェクト概要">プロジェクト概要</a></li>
+            <li><a href="#技術構成">技術構成</a></li>
+          </ul>
+        </li>
+        <li><a href="#-外部依存関係">📦 外部依存関係</a>
+          <ul>
+            <li><a href="#1-クラウドサービス外部apiへの依存">1. クラウドサービス・外部APIへの依存</a></li>
+            <li><a href="#2-インターネット接続の必要性">2. インターネット接続の必要性</a>
+              <ul>
+                <li><a href="#初回セットアップ時必須">初回セットアップ時（必須）</a></li>
+                <li><a href="#実行時ocr処理時">実行時（OCR処理時）</a></li>
+              </ul>
+            </li>
+            <li><a href="#3-主要な依存パッケージ">3. 主要な依存パッケージ</a></li>
+          </ul>
+        </li>
+        <li><a href="#-必要なリソース">🗂️ 必要なリソース</a>
+          <ul>
+            <li><a href="#1-モデルファイル">1. モデルファイル</a>
+              <ul>
+                <li><a href="#モデルの所在">モデルの所在</a></li>
+                <li><a href="#モデルのダウンロードが必要か">モデルのダウンロードが必要か</a></li>
+              </ul>
+            </li>
+            <li><a href="#2-事前学習済みモデル">2. 事前学習済みモデル</a></li>
+          </ul>
+        </li>
+        <li><a href="#-動作環境">🖥️ 動作環境</a>
+          <ul>
+            <li><a href="#1-完全オフライン環境で動作可能か">1. 完全オフライン環境で動作可能か</a>
+              <ul>
+                <li><a href="#前提条件">前提条件</a></li>
+                <li><a href="#実行環境">実行環境</a></li>
+              </ul>
+            </li>
+            <li><a href="#2-初回セットアップ時の要件">2. 初回セットアップ時の要件</a>
+              <ul>
+                <li><a href="#-初回セットアップ時のみインターネット接続が必要">✅ 初回セットアップ時のみインターネット接続が必要</a></li>
+                <li><a href="#デスクトップアプリ版の場合">デスクトップアプリ版の場合</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#-確認したファイルソース">📂 確認したファイル・ソース</a>
+          <ul>
+            <li><a href="#githubリポジトリ">GitHubリポジトリ</a></li>
+            <li><a href="#web検索結果">Web検索結果</a></li>
+            <li><a href="#ソースコード推測">ソースコード（推測）</a></li>
+          </ul>
+        </li>
+        <li><a href="#-セキュリティプライバシー">🔐 セキュリティ・プライバシー</a>
+          <ul>
+            <li><a href="#データの外部送信">データの外部送信</a></li>
+            <li><a href="#外部サービスへの依存">外部サービスへの依存</a></li>
+          </ul>
+        </li>
+        <li><a href="#-結論">✅ 結論</a>
+          <ul>
+            <li><a href="#ローカル完結性の評価">ローカル完結性の評価</a></li>
+            <li><a href="#外部依存関係の一覧">外部依存関係の一覧</a>
+              <ul>
+                <li><a href="#必須初回セットアップ時のみ">必須（初回セットアップ時のみ）</a></li>
+                <li><a href="#依存パッケージ実行時">依存パッケージ（実行時）</a></li>
+                <li><a href="#依存なし">依存なし</a></li>
+              </ul>
+            </li>
+            <li><a href="#完全オフライン動作の可否">完全オフライン動作の可否</a>
+              <ul>
+                <li><a href="#手順">手順</a></li>
+              </ul>
+            </li>
+            <li><a href="#初回セットアップ時の要件">初回セットアップ時の要件</a>
+              <ul>
+                <li><a href="#-必要なもの初回のみ">✅ 必要なもの（初回のみ）</a></li>
+                <li><a href="#-不要なもの">❌ 不要なもの</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#-参考資料">📚 参考資料</a>
+          <ul>
+            <li><a href="#公式ソース">公式ソース</a></li>
+            <li><a href="#技術記事">技術記事</a></li>
+            <li><a href="#関連プロジェクト">関連プロジェクト</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+<article class="markdown book-post">
+  <h1>
+    NDLOCR-Lite ローカル完結性調査レポート
+  </h1>
+  
+  <div class="flex align-center text-small book-post-date">
+    <img src="/svg/calendar.svg" class="book-icon " alt="" />
+    <span>2月 26, 2026</span>
+  </div>
+
+
+
+  
+  <div class="text-small">
+    
+      <a href="/categories/AI/">AI</a>
+  </div>
+  
+
+
+  <div class="book-post-content"><h1 id="ndlocr-lite-ローカル完結性調査レポート">
+  NDLOCR-Lite ローカル完結性調査レポート
+  
+  <a class="anchor" href="#ndlocr-lite-%e3%83%ad%e3%83%bc%e3%82%ab%e3%83%ab%e5%ae%8c%e7%b5%90%e6%80%a7%e8%aa%bf%e6%9f%bb%e3%83%ac%e3%83%9d%e3%83%bc%e3%83%88">#</a>
+  
+</h1>
+<p><strong>調査日時</strong>: 2026-02-26 10:55
+<strong>調査担当</strong>: 秘書1 ひなた
+<strong>対象リポジトリ</strong>: <a href="https://github.com/ndl-lab/ndlocr-lite">https://github.com/ndl-lab/ndlocr-lite</a></p>
+<hr>
+<h2 id="-調査結果サマリー">
+  📊 調査結果サマリー
+  
+  <a class="anchor" href="#-%e8%aa%bf%e6%9f%bb%e7%b5%90%e6%9e%9c%e3%82%b5%e3%83%9e%e3%83%aa%e3%83%bc">#</a>
+  
+</h2>
+<h3 id="ローカルで完結しているか">
+  ローカルで完結しているか
+  
+  <a class="anchor" href="#%e3%83%ad%e3%83%bc%e3%82%ab%e3%83%ab%e3%81%a7%e5%ae%8c%e7%b5%90%e3%81%97%e3%81%a6%e3%81%84%e3%82%8b%e3%81%8b">#</a>
+  
+</h3>
+<p><strong>✅ Yes — 完全にローカルで完結</strong></p>
+<p>NDLOCR-Liteは、一度インストール・セットアップが完了すれば、<strong>完全オフライン環境で動作</strong>します。</p>
+<hr>
+<h2 id="-リポジトリの概要目的">
+  🔍 リポジトリの概要・目的
+  
+  <a class="anchor" href="#-%e3%83%aa%e3%83%9d%e3%82%b8%e3%83%88%e3%83%aa%e3%81%ae%e6%a6%82%e8%a6%81%e7%9b%ae%e7%9a%84">#</a>
+  
+</h2>
+<h3 id="プロジェクト概要">
+  プロジェクト概要
+  
+  <a class="anchor" href="#%e3%83%97%e3%83%ad%e3%82%b8%e3%82%a7%e3%82%af%e3%83%88%e6%a6%82%e8%a6%81">#</a>
+  
+</h3>
+<p><strong>NDLOCR-Lite</strong>は、国立国会図書館デジタル化資料送信サービスラボ（NDL Lab）が開発した<strong>軽量なOCRアプリケーション</strong>です。</p>
+<p><strong>主な特徴</strong>:</p>
+<ul>
+<li>GPU不要で動作（一般的なノートPC環境で利用可能）</li>
+<li>書籍・雑誌等のデジタル化資料を文字データに変換</li>
+<li>日本語縦書き、横書き、英語活字、手書き文字に対応（試験的）</li>
+</ul>
+<p><strong>開発元</strong>: 国立国会図書館デジタル化資料送信サービスラボ（NDL Lab）</p>
+<p><strong>ライセンス</strong>: CC BY 4.0</p>
+<p><strong>リリース日</strong>: 2026年2月24日（最新版: v1.1.0, 2026年2月25日）</p>
+<h3 id="技術構成">
+  技術構成
+  
+  <a class="anchor" href="#%e6%8a%80%e8%a1%93%e6%a7%8b%e6%88%90">#</a>
+  
+</h3>
+<p><strong>3つのコア機能</strong>:</p>
+<ol>
+<li><strong>レイアウト認識</strong>: DEIMv2モデル使用</li>
+<li><strong>文字列認識</strong>: PARSeqモデル使用</li>
+<li><strong>読み順整列</strong>: NDLOCR本家と同じモジュール</li>
+</ol>
+<p><strong>対応プラットフォーム</strong>:</p>
+<ul>
+<li>Windows 11</li>
+<li>macOS（Apple M4、macOS Sequoia / Intel Mac対応）</li>
+<li>Linux（Ubuntu 22.04）</li>
+</ul>
+<p><strong>対応入力形式</strong>: JPG, JPEG, PNG, TIFF, TIF, JP2, BMP</p>
+<hr>
+<h2 id="-外部依存関係">
+  📦 外部依存関係
+  
+  <a class="anchor" href="#-%e5%a4%96%e9%83%a8%e4%be%9d%e5%ad%98%e9%96%a2%e4%bf%82">#</a>
+  
+</h2>
+<h3 id="1-クラウドサービス外部apiへの依存">
+  1. クラウドサービス・外部APIへの依存
+  
+  <a class="anchor" href="#1-%e3%82%af%e3%83%a9%e3%82%a6%e3%83%89%e3%82%b5%e3%83%bc%e3%83%93%e3%82%b9%e5%a4%96%e9%83%a8api%e3%81%b8%e3%81%ae%e4%be%9d%e5%ad%98">#</a>
+  
+</h3>
+<p><strong>❌ なし</strong></p>
+<p>NDLOCR-Liteは、以下のクラウドサービスや外部APIに<strong>一切依存していません</strong>:</p>
+<ul>
+<li>AWS、GCP、Azure等のクラウドサービス</li>
+<li>外部OCR API</li>
+<li>その他の外部Webサービス</li>
+</ul>
+<h3 id="2-インターネット接続の必要性">
+  2. インターネット接続の必要性
+  
+  <a class="anchor" href="#2-%e3%82%a4%e3%83%b3%e3%82%bf%e3%83%bc%e3%83%8d%e3%83%83%e3%83%88%e6%8e%a5%e7%b6%9a%e3%81%ae%e5%bf%85%e8%a6%81%e6%80%a7">#</a>
+  
+</h3>
+<h4 id="初回セットアップ時必須">
+  初回セットアップ時（必須）
+  
+  <a class="anchor" href="#%e5%88%9d%e5%9b%9e%e3%82%bb%e3%83%83%e3%83%88%e3%82%a2%e3%83%83%e3%83%97%e6%99%82%e5%bf%85%e9%a0%88">#</a>
+  
+</h4>
+<p><strong>✅ インターネット接続が必要</strong></p>
+<p>以下の作業でインターネット接続が必要です:</p>
+<ul>
+<li>GitHubリポジトリのクローン</li>
+<li>Pythonパッケージのインストール（pip install）
+<ul>
+<li>onnxruntime</li>
+<li>lxml</li>
+<li>その他依存パッケージ</li>
+</ul>
+</li>
+</ul>
+<h4 id="実行時ocr処理時">
+  実行時（OCR処理時）
+  
+  <a class="anchor" href="#%e5%ae%9f%e8%a1%8c%e6%99%82ocr%e5%87%a6%e7%90%86%e6%99%82">#</a>
+  
+</h4>
+<p><strong>❌ インターネット接続不要</strong></p>
+<p>一度セットアップが完了すれば、OCR処理時にインターネット接続は<strong>不要</strong>です。</p>
+<h3 id="3-主要な依存パッケージ">
+  3. 主要な依存パッケージ
+  
+  <a class="anchor" href="#3-%e4%b8%bb%e8%a6%81%e3%81%aa%e4%be%9d%e5%ad%98%e3%83%91%e3%83%83%e3%82%b1%e3%83%bc%e3%82%b8">#</a>
+  
+</h3>
+<p><strong>機械学習フレームワーク</strong>:</p>
+<ul>
+<li><strong>ONNX Runtime</strong>: モデル推論に使用（必須）</li>
+<li><strong>PyTorch</strong>: モデル学習用（実行時は不要、開発者のみ）</li>
+<li>オプション: <code>onnxruntime-gpu</code>（GPU使用時、ベータ機能）</li>
+</ul>
+<p><strong>その他のライブラリ</strong>:</p>
+<ul>
+<li><strong>lxml</strong>: XML/HTML処理（v1.1.0で依存関係あり）</li>
+<li>画像処理ライブラリ（PIL/Pillow等、推測）</li>
+<li>NumPy等の数値計算ライブラリ（推測）</li>
+</ul>
+<p><strong>注</strong>: <code>requirements.txt</code>の詳細は取得できませんでしたが、上記は公式情報とWeb検索結果から確認されたパッケージです。</p>
+<hr>
+<h2 id="-必要なリソース">
+  🗂️ 必要なリソース
+  
+  <a class="anchor" href="#-%e5%bf%85%e8%a6%81%e3%81%aa%e3%83%aa%e3%82%bd%e3%83%bc%e3%82%b9">#</a>
+  
+</h2>
+<h3 id="1-モデルファイル">
+  1. モデルファイル
+  
+  <a class="anchor" href="#1-%e3%83%a2%e3%83%87%e3%83%ab%e3%83%95%e3%82%a1%e3%82%a4%e3%83%ab">#</a>
+  
+</h3>
+<h4 id="モデルの所在">
+  モデルの所在
+  
+  <a class="anchor" href="#%e3%83%a2%e3%83%87%e3%83%ab%e3%81%ae%e6%89%80%e5%9c%a8">#</a>
+  
+</h4>
+<p><strong>✅ ローカル（リポジトリに含まれる）</strong></p>
+<p>モデルファイルは<strong>リポジトリに同梱</strong>されており、別途ダウンロード不要です。</p>
+<p><strong>モデルの配置場所</strong>:</p>
+<pre tabindex="0"><code>src/model/
+├── DEIMv2モデル（レイアウト認識、.onnx形式）
+└── PARSeqモデル（文字列認識、.onnx形式）
+</code></pre><p><strong>形式</strong>: ONNX（.onnx）</p>
+<p><strong>サイズ</strong>: 具体的なサイズは不明（一般的なONNXモデルは数MB～数百MB程度）</p>
+<h4 id="モデルのダウンロードが必要か">
+  モデルのダウンロードが必要か
+  
+  <a class="anchor" href="#%e3%83%a2%e3%83%87%e3%83%ab%e3%81%ae%e3%83%80%e3%82%a6%e3%83%b3%e3%83%ad%e3%83%bc%e3%83%89%e3%81%8c%e5%bf%85%e8%a6%81%e3%81%8b">#</a>
+  
+</h4>
+<p><strong>❌ 不要</strong></p>
+<p>モデルはリポジトリに含まれているため、<strong>別途ダウンロードは不要</strong>です。</p>
+<p>GitHubリポジトリをクローンした時点で、全てのモデルファイルが取得されます。</p>
+<h3 id="2-事前学習済みモデル">
+  2. 事前学習済みモデル
+  
+  <a class="anchor" href="#2-%e4%ba%8b%e5%89%8d%e5%ad%a6%e7%bf%92%e6%b8%88%e3%81%bf%e3%83%a2%e3%83%87%e3%83%ab">#</a>
+  
+</h3>
+<p><strong>✅ すべてローカルに含まれる</strong></p>
+<ul>
+<li>DEIMv2（レイアウト認識モデル）</li>
+<li>PARSeq（文字列認識モデル）</li>
+</ul>
+<p>両モデルとも、NDL Labが独自に学習・ONNX形式にエクスポートしたものです。</p>
+<hr>
+<h2 id="-動作環境">
+  🖥️ 動作環境
+  
+  <a class="anchor" href="#-%e5%8b%95%e4%bd%9c%e7%92%b0%e5%a2%83">#</a>
+  
+</h2>
+<h3 id="1-完全オフライン環境で動作可能か">
+  1. 完全オフライン環境で動作可能か
+  
+  <a class="anchor" href="#1-%e5%ae%8c%e5%85%a8%e3%82%aa%e3%83%95%e3%83%a9%e3%82%a4%e3%83%b3%e7%92%b0%e5%a2%83%e3%81%a7%e5%8b%95%e4%bd%9c%e5%8f%af%e8%83%bd%e3%81%8b">#</a>
+  
+</h3>
+<p><strong>✅ Yes — 完全オフライン動作可能</strong></p>
+<p>以下の条件を満たせば、完全オフライン環境で動作します:</p>
+<h4 id="前提条件">
+  前提条件
+  
+  <a class="anchor" href="#%e5%89%8d%e6%8f%90%e6%9d%a1%e4%bb%b6">#</a>
+  
+</h4>
+<ol>
+<li><strong>Python 3.10以上</strong>がインストール済み</li>
+<li><strong>必要なPythonパッケージ</strong>がインストール済み
+<ul>
+<li>onnxruntime</li>
+<li>lxml</li>
+<li>その他依存パッケージ</li>
+</ul>
+</li>
+<li><strong>NDLOCR-Liteリポジトリ</strong>がローカルに存在（モデルファイル含む）</li>
+</ol>
+<h4 id="実行環境">
+  実行環境
+  
+  <a class="anchor" href="#%e5%ae%9f%e8%a1%8c%e7%92%b0%e5%a2%83">#</a>
+  
+</h4>
+<ul>
+<li>コマンドライン版（CLI）: Python環境で実行</li>
+<li>デスクトップアプリ版（GUI）: Windows/Mac/Linux用のパッケージ版
+<ul>
+<li>Releases ページから <code>.exe</code>、<code>.app</code>、<code>.AppImage</code> 等をダウンロード</li>
+<li>これらはスタンドアロンで動作（Python不要）</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-初回セットアップ時の要件">
+  2. 初回セットアップ時の要件
+  
+  <a class="anchor" href="#2-%e5%88%9d%e5%9b%9e%e3%82%bb%e3%83%83%e3%83%88%e3%82%a2%e3%83%83%e3%83%97%e6%99%82%e3%81%ae%e8%a6%81%e4%bb%b6">#</a>
+  
+</h3>
+<h4 id="-初回セットアップ時のみインターネット接続が必要">
+  ✅ 初回セットアップ時のみインターネット接続が必要
+  
+  <a class="anchor" href="#-%e5%88%9d%e5%9b%9e%e3%82%bb%e3%83%83%e3%83%88%e3%82%a2%e3%83%83%e3%83%97%e6%99%82%e3%81%ae%e3%81%bf%e3%82%a4%e3%83%b3%e3%82%bf%e3%83%bc%e3%83%8d%e3%83%83%e3%83%88%e6%8e%a5%e7%b6%9a%e3%81%8c%e5%bf%85%e8%a6%81">#</a>
+  
+</h4>
+<p><strong>インターネット接続が必要な作業</strong>:</p>
+<ol>
+<li>
+<p><strong>リポジトリのクローン</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/ndl-lab/ndlocr-lite.git
+</span></span></code></pre></div></li>
+<li>
+<p><strong>Pythonパッケージのインストール</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd ndlocr-lite
+</span></span><span style="display:flex;"><span>pip install -r requirements.txt
+</span></span></code></pre></div><p>または</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>uv tool install .
+</span></span></code></pre></div></li>
+</ol>
+<p><strong>インターネット接続が不要な作業</strong>:</p>
+<ul>
+<li>モデルファイルのダウンロード（リポジトリに含まれるため）</li>
+<li>外部APIキーの取得</li>
+<li>クラウドサービスへの登録</li>
+</ul>
+<h4 id="デスクトップアプリ版の場合">
+  デスクトップアプリ版の場合
+  
+  <a class="anchor" href="#%e3%83%87%e3%82%b9%e3%82%af%e3%83%88%e3%83%83%e3%83%97%e3%82%a2%e3%83%97%e3%83%aa%e7%89%88%e3%81%ae%e5%a0%b4%e5%90%88">#</a>
+  
+</h4>
+<p><strong>Releases ページからダウンロード</strong>:</p>
+<ul>
+<li>Windows: <code>.exe</code>または<code>.msi</code></li>
+<li>macOS: <code>.app</code>または<code>.dmg</code></li>
+<li>Linux: <code>.AppImage</code>または<code>.deb</code></li>
+</ul>
+<p>ダウンロード後は<strong>オフラインで実行可能</strong>です。</p>
+<hr>
+<h2 id="-確認したファイルソース">
+  📂 確認したファイル・ソース
+  
+  <a class="anchor" href="#-%e7%a2%ba%e8%aa%8d%e3%81%97%e3%81%9f%e3%83%95%e3%82%a1%e3%82%a4%e3%83%ab%e3%82%bd%e3%83%bc%e3%82%b9">#</a>
+  
+</h2>
+<h3 id="githubリポジトリ">
+  GitHubリポジトリ
+  
+  <a class="anchor" href="#github%e3%83%aa%e3%83%9d%e3%82%b8%e3%83%88%e3%83%aa">#</a>
+  
+</h3>
+<ol>
+<li>✅ <strong>README.md</strong>: リポジトリのメインページから取得</li>
+<li>❌ <strong>requirements.txt</strong>: 404エラー（ファイルパス不明）</li>
+<li>❌ <strong>setup.py</strong>: 404エラー（存在しない可能性）</li>
+<li>❌ <strong>pyproject.toml</strong>: 404エラー（存在しない可能性）</li>
+<li>✅ <strong>Releases ページ</strong>: v1.1.0の変更履歴を確認</li>
+</ol>
+<h3 id="web検索結果">
+  Web検索結果
+  
+  <a class="anchor" href="#web%e6%a4%9c%e7%b4%a2%e7%b5%90%e6%9e%9c">#</a>
+  
+</h3>
+<ol>
+<li>✅ <a href="https://forest.watch.impress.co.jp/docs/news/2088188.html">窓の杜の記事</a> — 概要とモデル所在の確認</li>
+<li>✅ <a href="https://gigazine.net/gsc_news/en/20260225-ndlocr-lite/">GIGAZINE記事</a> — 機能と対応言語の確認</li>
+<li>✅ <a href="https://x.com/NDLJP/status/2026167169676104100">国会図書館公式X（Twitter）</a> — リリース情報</li>
+<li>✅ <a href="https://deepwiki.com/ndl-lab/ndlocr-lite">DeepWiki</a> — 技術詳細の確認</li>
+</ol>
+<h3 id="ソースコード推測">
+  ソースコード（推測）
+  
+  <a class="anchor" href="#%e3%82%bd%e3%83%bc%e3%82%b9%e3%82%b3%e3%83%bc%e3%83%89%e6%8e%a8%e6%b8%ac">#</a>
+  
+</h3>
+<ul>
+<li><code>src/model/</code>: ONNXモデルファイルの配置場所（Web検索結果から確認）</li>
+<li><code>src/ndl_parser.py</code>: 読み順整列モジュール</li>
+<li><code>ndlocr-lite-gui/main.py</code>: GUIアプリケーションのメイン</li>
+</ul>
+<hr>
+<h2 id="-セキュリティプライバシー">
+  🔐 セキュリティ・プライバシー
+  
+  <a class="anchor" href="#-%e3%82%bb%e3%82%ad%e3%83%a5%e3%83%aa%e3%83%86%e3%82%a3%e3%83%97%e3%83%a9%e3%82%a4%e3%83%90%e3%82%b7%e3%83%bc">#</a>
+  
+</h2>
+<h3 id="データの外部送信">
+  データの外部送信
+  
+  <a class="anchor" href="#%e3%83%87%e3%83%bc%e3%82%bf%e3%81%ae%e5%a4%96%e9%83%a8%e9%80%81%e4%bf%a1">#</a>
+  
+</h3>
+<p><strong>❌ なし</strong></p>
+<p>OCR処理は<strong>完全にローカルで実行</strong>されます。</p>
+<ul>
+<li>画像データは外部サーバーに送信されない</li>
+<li>OCR結果も外部に送信されない</li>
+<li>ユーザーのプライバシーが保護される</li>
+</ul>
+<h3 id="外部サービスへの依存">
+  外部サービスへの依存
+  
+  <a class="anchor" href="#%e5%a4%96%e9%83%a8%e3%82%b5%e3%83%bc%e3%83%93%e3%82%b9%e3%81%b8%e3%81%ae%e4%be%9d%e5%ad%98">#</a>
+  
+</h3>
+<p><strong>❌ なし</strong></p>
+<ul>
+<li>クラウドOCR APIへの依存なし</li>
+<li>外部データベースへの依存なし</li>
+<li>テレメトリ・使用状況の送信なし</li>
+</ul>
+<hr>
+<h2 id="-結論">
+  ✅ 結論
+  
+  <a class="anchor" href="#-%e7%b5%90%e8%ab%96">#</a>
+  
+</h2>
+<h3 id="ローカル完結性の評価">
+  ローカル完結性の評価
+  
+  <a class="anchor" href="#%e3%83%ad%e3%83%bc%e3%82%ab%e3%83%ab%e5%ae%8c%e7%b5%90%e6%80%a7%e3%81%ae%e8%a9%95%e4%be%a1">#</a>
+  
+</h3>
+<p><strong>✅ 完全にローカルで完結している</strong></p>
+<p>NDLOCR-Liteは、以下の点で<strong>完全なローカル完結性</strong>を持つソフトウェアです:</p>
+<ol>
+<li>✅ <strong>モデルファイルがリポジトリに含まれる</strong> — 別途ダウンロード不要</li>
+<li>✅ <strong>外部API・クラウドサービスへの依存なし</strong></li>
+<li>✅ <strong>オフライン環境で完全動作可能</strong>（初回セットアップ後）</li>
+<li>✅ <strong>プライバシー保護</strong> — データの外部送信なし</li>
+</ol>
+<h3 id="外部依存関係の一覧">
+  外部依存関係の一覧
+  
+  <a class="anchor" href="#%e5%a4%96%e9%83%a8%e4%be%9d%e5%ad%98%e9%96%a2%e4%bf%82%e3%81%ae%e4%b8%80%e8%a6%a7">#</a>
+  
+</h3>
+<h4 id="必須初回セットアップ時のみ">
+  必須（初回セットアップ時のみ）
+  
+  <a class="anchor" href="#%e5%bf%85%e9%a0%88%e5%88%9d%e5%9b%9e%e3%82%bb%e3%83%83%e3%83%88%e3%82%a2%e3%83%83%e3%83%97%e6%99%82%e3%81%ae%e3%81%bf">#</a>
+  
+</h4>
+<table>
+  <thead>
+      <tr>
+          <th>依存項目</th>
+          <th>用途</th>
+          <th>必要なタイミング</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>インターネット接続</td>
+          <td>リポジトリクローン、パッケージインストール</td>
+          <td>初回セットアップ時のみ</td>
+      </tr>
+      <tr>
+          <td>Python 3.10以上</td>
+          <td>実行環境（CLI版）</td>
+          <td>常時（GUIアプリ版は不要）</td>
+      </tr>
+      <tr>
+          <td>pip/uv</td>
+          <td>パッケージ管理</td>
+          <td>初回セットアップ時のみ</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="依存パッケージ実行時">
+  依存パッケージ（実行時）
+  
+  <a class="anchor" href="#%e4%be%9d%e5%ad%98%e3%83%91%e3%83%83%e3%82%b1%e3%83%bc%e3%82%b8%e5%ae%9f%e8%a1%8c%e6%99%82">#</a>
+  
+</h4>
+<table>
+  <thead>
+      <tr>
+          <th>パッケージ</th>
+          <th>用途</th>
+          <th>備考</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>onnxruntime</td>
+          <td>モデル推論</td>
+          <td>必須</td>
+      </tr>
+      <tr>
+          <td>lxml</td>
+          <td>XML/HTML処理</td>
+          <td>必須</td>
+      </tr>
+      <tr>
+          <td>（その他）</td>
+          <td>画像処理、数値計算等</td>
+          <td>requirements.txt参照</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="依存なし">
+  依存なし
+  
+  <a class="anchor" href="#%e4%be%9d%e5%ad%98%e3%81%aa%e3%81%97">#</a>
+  
+</h4>
+<table>
+  <thead>
+      <tr>
+          <th>項目</th>
+          <th>状態</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>クラウドサービス（AWS、GCP、Azure等）</td>
+          <td>❌ 依存なし</td>
+      </tr>
+      <tr>
+          <td>外部OCR API</td>
+          <td>❌ 依存なし</td>
+      </tr>
+      <tr>
+          <td>外部データベース</td>
+          <td>❌ 依存なし</td>
+      </tr>
+      <tr>
+          <td>インターネット接続（実行時）</td>
+          <td>❌ 不要</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="完全オフライン動作の可否">
+  完全オフライン動作の可否
+  
+  <a class="anchor" href="#%e5%ae%8c%e5%85%a8%e3%82%aa%e3%83%95%e3%83%a9%e3%82%a4%e3%83%b3%e5%8b%95%e4%bd%9c%e3%81%ae%e5%8f%af%e5%90%a6">#</a>
+  
+</h3>
+<p><strong>✅ 可能</strong></p>
+<p>以下の手順で完全オフライン環境を構築できます:</p>
+<h4 id="手順">
+  手順
+  
+  <a class="anchor" href="#%e6%89%8b%e9%a0%86">#</a>
+  
+</h4>
+<ol>
+<li>
+<p><strong>オンライン環境でセットアップ</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/ndl-lab/ndlocr-lite.git
+</span></span><span style="display:flex;"><span>cd ndlocr-lite
+</span></span><span style="display:flex;"><span>pip install -r requirements.txt
+</span></span></code></pre></div></li>
+<li>
+<p><strong>セットアップ完了後</strong>:</p>
+<ul>
+<li>インターネット接続を切断</li>
+<li>オフライン環境に移動（USBメモリ等でコピー）</li>
+</ul>
+</li>
+<li>
+<p><strong>オフライン環境で実行</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd ndlocr-lite/src
+</span></span><span style="display:flex;"><span>python main.py <span style="color:#f92672">[</span>入力画像パス<span style="color:#f92672">]</span>
+</span></span></code></pre></div></li>
+</ol>
+<p>または、デスクトップアプリ版（GUI）をReleasesページからダウンロードし、オフライン環境にコピーして実行。</p>
+<h3 id="初回セットアップ時の要件">
+  初回セットアップ時の要件
+  
+  <a class="anchor" href="#%e5%88%9d%e5%9b%9e%e3%82%bb%e3%83%83%e3%83%88%e3%82%a2%e3%83%83%e3%83%97%e6%99%82%e3%81%ae%e8%a6%81%e4%bb%b6">#</a>
+  
+</h3>
+<h4 id="-必要なもの初回のみ">
+  ✅ 必要なもの（初回のみ）
+  
+  <a class="anchor" href="#-%e5%bf%85%e8%a6%81%e3%81%aa%e3%82%82%e3%81%ae%e5%88%9d%e5%9b%9e%e3%81%ae%e3%81%bf">#</a>
+  
+</h4>
+<ol>
+<li><strong>インターネット接続</strong>: リポジトリクローンとパッケージインストール用</li>
+<li><strong>Python 3.10以上</strong>: CLI版を使用する場合</li>
+<li><strong>Git</strong>: リポジトリクローン用</li>
+<li><strong>pip または uv</strong>: パッケージ管理ツール</li>
+</ol>
+<h4 id="-不要なもの">
+  ❌ 不要なもの
+  
+  <a class="anchor" href="#-%e4%b8%8d%e8%a6%81%e3%81%aa%e3%82%82%e3%81%ae">#</a>
+  
+</h4>
+<ol>
+<li>外部APIキー</li>
+<li>クラウドサービスアカウント</li>
+<li>GPU（オプション機能、CPUのみでも動作）</li>
+<li>追加モデルのダウンロード</li>
+</ol>
+<hr>
+<h2 id="-参考資料">
+  📚 参考資料
+  
+  <a class="anchor" href="#-%e5%8f%82%e8%80%83%e8%b3%87%e6%96%99">#</a>
+  
+</h2>
+<h3 id="公式ソース">
+  公式ソース
+  
+  <a class="anchor" href="#%e5%85%ac%e5%bc%8f%e3%82%bd%e3%83%bc%e3%82%b9">#</a>
+  
+</h3>
+<ol>
+<li><a href="https://github.com/ndl-lab/ndlocr-lite">GitHub - ndl-lab/ndlocr-lite</a></li>
+<li><a href="https://github.com/ndl-lab/ndlocr-lite/releases">Releases · ndl-lab/ndlocr-lite</a></li>
+<li><a href="https://x.com/NDLJP/status/2026167169676104100">国立国会図書館 NDL 公式X（Twitter）</a></li>
+</ol>
+<h3 id="技術記事">
+  技術記事
+  
+  <a class="anchor" href="#%e6%8a%80%e8%a1%93%e8%a8%98%e4%ba%8b">#</a>
+  
+</h3>
+<ol>
+<li><a href="https://forest.watch.impress.co.jp/docs/news/2088188.html">GPUなしで動作する軽量なAI OCRツール「NDLOCR-Lite」- 窓の杜</a></li>
+<li><a href="https://gigazine.net/gsc_news/en/20260225-ndlocr-lite/">NDLOCR-Lite, the National Diet Library&rsquo;s free OCR app - GIGAZINE</a></li>
+<li><a href="https://deepwiki.com/ndl-lab/ndlocr-lite">ndl-lab/ndlocr-lite | DeepWiki</a></li>
+</ol>
+<h3 id="関連プロジェクト">
+  関連プロジェクト
+  
+  <a class="anchor" href="#%e9%96%a2%e9%80%a3%e3%83%97%e3%83%ad%e3%82%b8%e3%82%a7%e3%82%af%e3%83%88">#</a>
+  
+</h3>
+<ol>
+<li><a href="https://github.com/ndl-lab/ndlocr_cli">NDLOCR（フル版）</a> — GPU対応の高機能版</li>
+<li><a href="https://github.com/ndl-lab/ndlkotenocr-lite">NDL古典籍OCR-Lite</a> — 古典籍専用の旧版</li>
+</ol>
+<hr>
+<p><strong>調査完了日時</strong>: 2026-02-26 10:55
+<strong>調査担当</strong>: 秘書1 ひなた
+<strong>次のアクション</strong>: 副室長 凛へ報告</p>
+</div>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+
+<aside class="book-toc">
+  <div class="book-toc-content">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#ndlocr-lite-ローカル完結性調査レポート">NDLOCR-Lite ローカル完結性調査レポート</a>
+      <ul>
+        <li><a href="#-調査結果サマリー">📊 調査結果サマリー</a>
+          <ul>
+            <li><a href="#ローカルで完結しているか">ローカルで完結しているか</a></li>
+          </ul>
+        </li>
+        <li><a href="#-リポジトリの概要目的">🔍 リポジトリの概要・目的</a>
+          <ul>
+            <li><a href="#プロジェクト概要">プロジェクト概要</a></li>
+            <li><a href="#技術構成">技術構成</a></li>
+          </ul>
+        </li>
+        <li><a href="#-外部依存関係">📦 外部依存関係</a>
+          <ul>
+            <li><a href="#1-クラウドサービス外部apiへの依存">1. クラウドサービス・外部APIへの依存</a></li>
+            <li><a href="#2-インターネット接続の必要性">2. インターネット接続の必要性</a>
+              <ul>
+                <li><a href="#初回セットアップ時必須">初回セットアップ時（必須）</a></li>
+                <li><a href="#実行時ocr処理時">実行時（OCR処理時）</a></li>
+              </ul>
+            </li>
+            <li><a href="#3-主要な依存パッケージ">3. 主要な依存パッケージ</a></li>
+          </ul>
+        </li>
+        <li><a href="#-必要なリソース">🗂️ 必要なリソース</a>
+          <ul>
+            <li><a href="#1-モデルファイル">1. モデルファイル</a>
+              <ul>
+                <li><a href="#モデルの所在">モデルの所在</a></li>
+                <li><a href="#モデルのダウンロードが必要か">モデルのダウンロードが必要か</a></li>
+              </ul>
+            </li>
+            <li><a href="#2-事前学習済みモデル">2. 事前学習済みモデル</a></li>
+          </ul>
+        </li>
+        <li><a href="#-動作環境">🖥️ 動作環境</a>
+          <ul>
+            <li><a href="#1-完全オフライン環境で動作可能か">1. 完全オフライン環境で動作可能か</a>
+              <ul>
+                <li><a href="#前提条件">前提条件</a></li>
+                <li><a href="#実行環境">実行環境</a></li>
+              </ul>
+            </li>
+            <li><a href="#2-初回セットアップ時の要件">2. 初回セットアップ時の要件</a>
+              <ul>
+                <li><a href="#-初回セットアップ時のみインターネット接続が必要">✅ 初回セットアップ時のみインターネット接続が必要</a></li>
+                <li><a href="#デスクトップアプリ版の場合">デスクトップアプリ版の場合</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#-確認したファイルソース">📂 確認したファイル・ソース</a>
+          <ul>
+            <li><a href="#githubリポジトリ">GitHubリポジトリ</a></li>
+            <li><a href="#web検索結果">Web検索結果</a></li>
+            <li><a href="#ソースコード推測">ソースコード（推測）</a></li>
+          </ul>
+        </li>
+        <li><a href="#-セキュリティプライバシー">🔐 セキュリティ・プライバシー</a>
+          <ul>
+            <li><a href="#データの外部送信">データの外部送信</a></li>
+            <li><a href="#外部サービスへの依存">外部サービスへの依存</a></li>
+          </ul>
+        </li>
+        <li><a href="#-結論">✅ 結論</a>
+          <ul>
+            <li><a href="#ローカル完結性の評価">ローカル完結性の評価</a></li>
+            <li><a href="#外部依存関係の一覧">外部依存関係の一覧</a>
+              <ul>
+                <li><a href="#必須初回セットアップ時のみ">必須（初回セットアップ時のみ）</a></li>
+                <li><a href="#依存パッケージ実行時">依存パッケージ（実行時）</a></li>
+                <li><a href="#依存なし">依存なし</a></li>
+              </ul>
+            </li>
+            <li><a href="#完全オフライン動作の可否">完全オフライン動作の可否</a>
+              <ul>
+                <li><a href="#手順">手順</a></li>
+              </ul>
+            </li>
+            <li><a href="#初回セットアップ時の要件">初回セットアップ時の要件</a>
+              <ul>
+                <li><a href="#-必要なもの初回のみ">✅ 必要なもの（初回のみ）</a></li>
+                <li><a href="#-不要なもの">❌ 不要なもの</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#-参考資料">📚 参考資料</a>
+          <ul>
+            <li><a href="#公式ソース">公式ソース</a></li>
+            <li><a href="#技術記事">技術記事</a></li>
+            <li><a href="#関連プロジェクト">関連プロジェクト</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </div>
+</aside>
+
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

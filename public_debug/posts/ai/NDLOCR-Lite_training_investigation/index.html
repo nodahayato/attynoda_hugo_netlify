@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="NDLOCR-Lite モデル学習機能調査レポート">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="/posts/ai/NDLOCR-Lite_training_investigation/">
+  <meta property="og:site_name" content="Knowlegdebase of 弁護士 野田隼人">
+  <meta property="og:title" content="NDLOCR-Lite モデル学習機能調査レポート">
+  <meta property="og:description" content="NDLOCR-Lite モデル学習機能調査レポート # 調査日時: 2026-02-26 14:50 調査担当: 秘書1 ひなた 対象リポジトリ: https://github.com/ndl-lab/ndlocr-lite
+📊 調査結果サマリー # モデル学習機能の有無 # ✅ Yes — 学習機能あり
+NDLOCR-Liteには、完全な学習機能が含まれています。train/ ディレクトリに学習用コード、設定ファイル、データ変換スクリプトが完備されています。
+ローカルで完結するか # ⚠️ 条件付きYes — 初回セットアップ時のみインターネット接続が必要
+初回セットアップ時: インターネット接続必須（リポジトリクローン、ライブラリインストール、データセットダウンロード） 学習実行時: 完全オフライン可能（すべてローカルで完結） 🔍 モデル学習機能の詳細 # 1. 学習対象モデル # NDLOCR-Liteでは、以下の2つのモデルを独自データで学習できます：
+モデル 用途 元リポジトリ 学習フレームワーク DEIMv2 レイアウト認識（文字領域検出） Intellindust-AI-Lab/DEIMv2 PyTorch 2.0&#43; PARSeq 文字列認識（OCR） baudm/parseq PyTorch 1.10&#43; 2. 学習用ディレクトリ構成 # train/ ├── README.md # 学習手順ドキュメント ├── deimv2code/ # DEIMv2カスタマイズコード │ ├── part1/ # 第1段階学習 │ ├── part2/ # 第2段階学習 │ └── configs/ # 設定ファイル ├── parseqcode/ # PARSeqカスタマイズコード │ ├── convertkotensekidata2lmdb.py # データ→LMDB変換 │ ├── convert2onnx.py # 学習済モデル→ONNX変換 │ ├── main_tiny768.yaml # 100文字対応設定 │ ├── main_tiny384.yaml # 50文字対応設定 │ └── main_tiny256.yaml # 30文字対応設定 ├── honkoku_rawdata/ # 学習データ（行ごと切り出し画像&#43;テキスト） └── data/ ├── train/real/ # LMDB形式学習データ └── val/ # LMDB形式検証データ 3. 学習手順（概要） # DEIMv2（レイアウト認識）の学習 # 第1段階: 基本モデルの学習 第2段階: チェックポイントからの継続学習（-t オプションで指定） 分散学習: 3つのGPUを使用した分散学習の実例あり PARSeq（文字列認識）の学習 # データ準備: 行ごと切り出し画像とテキストを準備 LMDB変換: convertkotensekidata2lmdb.py でLMDB形式に変換 学習実行: 3種類のモデルサイズ（100/50/30文字対応）で並列学習可能 ONNX変換: convert2onnx.py で学習済みモデルをONNX形式に変換 📦 外部依存関係 # 1. 学習データセット # みんなで翻刻 OCR学習用データセット # 名称: NDL古典籍OCR学習用データセット（みんなで翻刻加工データ）">
+  <meta property="og:locale" content="ja">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-26T14:50:00+09:00">
+    <meta property="article:modified_time" content="2026-02-26T14:50:00+09:00">
+<title>NDLOCR-Lite モデル学習機能調査レポート | Knowlegdebase of 弁護士 野田隼人</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="/posts/ai/NDLOCR-Lite_training_investigation/">
+<link rel="stylesheet" href="/book.min.bad7fde131c1ff4f3079703b4cc8e1c8fbdd92ecee65a2dc19b7572d2bf6ec8b.css" >
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/ja.search.min.66f033ac8e3ef71030409eb3795e3f8bce487aa76bd68a6600263afb4297c958.js" ></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-posts">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Knowlegdebase of 弁護士 野田隼人</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input type="text" id="book-search-input" placeholder="検索" aria-label="検索" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/categories/" >
+        カテゴリ
+      </a>
+      
+<ul>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/" >
+        フィリピン法に関する情報
+      </a>
+      
+<ul>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E3%81%AE%E6%B3%95%E4%BB%A4/" >
+        フィリピンの法令
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%83%A1%E3%83%A2/" >
+        フィリピン法メモ
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E3%81%AE%E8%A3%81%E5%88%A4%E4%BE%8B/" >
+        フィリピンの裁判例
+      </a>
+  </li>
+  
+</ul>
+
+  </li>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E4%B8%80%E8%88%AC/" >
+        フィリピン一般
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/" >
+        日本法に関する情報
+      </a>
+      
+<ul>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E6%97%A5%E6%9C%AC%E3%81%AE%E6%B3%95%E4%BB%A4/" >
+        日本の法令
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%83%A1%E3%83%A2/" >
+        日本法メモ
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E6%97%A5%E6%9C%AC%E3%81%AE%E8%A3%81%E5%88%A4%E4%BE%8B/" >
+        日本の裁判例
+      </a>
+  </li>
+  
+</ul>
+
+  </li>
+  
+  <li>
+    <a href="/categories/%E7%9B%B8%E7%B6%9A%E6%89%8B%E7%B6%9A/" >
+        相続手続
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E5%88%91%E4%BA%8B%E5%BC%81%E8%AD%B7/" >
+        刑事弁護
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E9%9B%91%E8%A8%98/" >
+        雑記
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/app/" >
+        app
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/AI/" >
+        AI
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E8%AA%AD%E6%9B%B8%E8%A6%96%E8%81%B4%E3%83%A1%E3%83%A2/" >
+        読書視聴メモ
+      </a>
+  </li>
+  
+</ul>
+
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <div class="book-header-content">
+    <div class="book-header-site-title">
+      <a href="/">Knowlegdebase of 弁護士 野田隼人</a>
+    </div>
+    <h3>NDLOCR-Lite モデル学習機能調査レポート</h3>
+  </div>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#ndlocr-lite-モデル学習機能調査レポート">NDLOCR-Lite モデル学習機能調査レポート</a>
+      <ul>
+        <li><a href="#-調査結果サマリー">📊 調査結果サマリー</a>
+          <ul>
+            <li><a href="#モデル学習機能の有無">モデル学習機能の有無</a></li>
+            <li><a href="#ローカルで完結するか">ローカルで完結するか</a></li>
+          </ul>
+        </li>
+        <li><a href="#-モデル学習機能の詳細">🔍 モデル学習機能の詳細</a>
+          <ul>
+            <li><a href="#1-学習対象モデル">1. 学習対象モデル</a></li>
+            <li><a href="#2-学習用ディレクトリ構成">2. 学習用ディレクトリ構成</a></li>
+            <li><a href="#3-学習手順概要">3. 学習手順（概要）</a>
+              <ul>
+                <li><a href="#deimv2レイアウト認識の学習">DEIMv2（レイアウト認識）の学習</a></li>
+                <li><a href="#parseq文字列認識の学習">PARSeq（文字列認識）の学習</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#-外部依存関係">📦 外部依存関係</a>
+          <ul>
+            <li><a href="#1-学習データセット">1. 学習データセット</a>
+              <ul>
+                <li><a href="#みんなで翻刻-ocr学習用データセット">みんなで翻刻 OCR学習用データセット</a></li>
+              </ul>
+            </li>
+            <li><a href="#2-クラウドサービス外部apiへの依存">2. クラウドサービス・外部APIへの依存</a></li>
+            <li><a href="#3-元モデルリポジトリへの依存">3. 元モデルリポジトリへの依存</a>
+              <ul>
+                <li><a href="#deimv2">DEIMv2</a></li>
+                <li><a href="#parseq">PARSeq</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#-学習環境の要件">🖥️ 学習環境の要件</a>
+          <ul>
+            <li><a href="#1-ハードウェア要件">1. ハードウェア要件</a>
+              <ul>
+                <li><a href="#gpu必須">GPU（必須）</a></li>
+                <li><a href="#メモリストレージ">メモリ・ストレージ</a></li>
+              </ul>
+            </li>
+            <li><a href="#2-ソフトウェア要件">2. ソフトウェア要件</a>
+              <ul>
+                <li><a href="#必須ライブラリ">必須ライブラリ</a></li>
+                <li><a href="#python環境">Python環境</a></li>
+              </ul>
+            </li>
+            <li><a href="#3-完全オフライン環境での学習可否">3. 完全オフライン環境での学習可否</a>
+              <ul>
+                <li><a href="#-可能初回セットアップ後">✅ 可能（初回セットアップ後）</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#-学習から推論までのパイプライン">🔄 学習から推論までのパイプライン</a>
+          <ul>
+            <li><a href="#全体の流れ">全体の流れ</a></li>
+            <li><a href="#onnx形式について">ONNX形式について</a></li>
+          </ul>
+        </li>
+        <li><a href="#-ndlocr本体フル版との比較">🔗 NDLOCR本体（フル版）との比較</a>
+          <ul>
+            <li><a href="#ndlocrフル版">NDLOCRフル版</a></li>
+          </ul>
+        </li>
+        <li><a href="#-結論">✅ 結論</a>
+          <ul>
+            <li><a href="#モデル学習機能の有無-1">モデル学習機能の有無</a></li>
+            <li><a href="#ローカルで完結するか-1">ローカルで完結するか</a>
+              <ul>
+                <li><a href="#初回セットアップ時インターネット接続必須">初回セットアップ時（インターネット接続必須）</a></li>
+                <li><a href="#学習実行時オフライン可能">学習実行時（オフライン可能）</a></li>
+              </ul>
+            </li>
+            <li><a href="#学習に必要な環境要件">学習に必要な環境・要件</a>
+              <ul>
+                <li><a href="#ハードウェア必須">ハードウェア（必須）</a></li>
+                <li><a href="#ソフトウェア必須">ソフトウェア（必須）</a></li>
+                <li><a href="#データセット必須">データセット（必須）</a></li>
+                <li><a href="#オフライン学習の可否">オフライン学習の可否</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#-参考資料">📚 参考資料</a>
+          <ul>
+            <li><a href="#ndlocr-lite関連">NDLOCR-Lite関連</a></li>
+            <li><a href="#学習データセット">学習データセット</a></li>
+            <li><a href="#元モデルリポジトリ">元モデルリポジトリ</a></li>
+            <li><a href="#ndlocrフル版-1">NDLOCRフル版</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+<article class="markdown book-post">
+  <h1>
+    NDLOCR-Lite モデル学習機能調査レポート
+  </h1>
+  
+  <div class="flex align-center text-small book-post-date">
+    <img src="/svg/calendar.svg" class="book-icon " alt="" />
+    <span>2月 26, 2026</span>
+  </div>
+
+
+
+  
+  <div class="text-small">
+    
+      <a href="/categories/AI/">AI</a>
+  </div>
+  
+
+
+  <div class="book-post-content"><h1 id="ndlocr-lite-モデル学習機能調査レポート">
+  NDLOCR-Lite モデル学習機能調査レポート
+  
+  <a class="anchor" href="#ndlocr-lite-%e3%83%a2%e3%83%87%e3%83%ab%e5%ad%a6%e7%bf%92%e6%a9%9f%e8%83%bd%e8%aa%bf%e6%9f%bb%e3%83%ac%e3%83%9d%e3%83%bc%e3%83%88">#</a>
+  
+</h1>
+<p><strong>調査日時</strong>: 2026-02-26 14:50
+<strong>調査担当</strong>: 秘書1 ひなた
+<strong>対象リポジトリ</strong>: <a href="https://github.com/ndl-lab/ndlocr-lite">https://github.com/ndl-lab/ndlocr-lite</a></p>
+<hr>
+<h2 id="-調査結果サマリー">
+  📊 調査結果サマリー
+  
+  <a class="anchor" href="#-%e8%aa%bf%e6%9f%bb%e7%b5%90%e6%9e%9c%e3%82%b5%e3%83%9e%e3%83%aa%e3%83%bc">#</a>
+  
+</h2>
+<h3 id="モデル学習機能の有無">
+  モデル学習機能の有無
+  
+  <a class="anchor" href="#%e3%83%a2%e3%83%87%e3%83%ab%e5%ad%a6%e7%bf%92%e6%a9%9f%e8%83%bd%e3%81%ae%e6%9c%89%e7%84%a1">#</a>
+  
+</h3>
+<p><strong>✅ Yes — 学習機能あり</strong></p>
+<p>NDLOCR-Liteには、<strong>完全な学習機能</strong>が含まれています。<code>train/</code> ディレクトリに学習用コード、設定ファイル、データ変換スクリプトが完備されています。</p>
+<h3 id="ローカルで完結するか">
+  ローカルで完結するか
+  
+  <a class="anchor" href="#%e3%83%ad%e3%83%bc%e3%82%ab%e3%83%ab%e3%81%a7%e5%ae%8c%e7%b5%90%e3%81%99%e3%82%8b%e3%81%8b">#</a>
+  
+</h3>
+<p><strong>⚠️ 条件付きYes — 初回セットアップ時のみインターネット接続が必要</strong></p>
+<ul>
+<li><strong>初回セットアップ時</strong>: インターネット接続必須（リポジトリクローン、ライブラリインストール、データセットダウンロード）</li>
+<li><strong>学習実行時</strong>: 完全オフライン可能（すべてローカルで完結）</li>
+</ul>
+<hr>
+<h2 id="-モデル学習機能の詳細">
+  🔍 モデル学習機能の詳細
+  
+  <a class="anchor" href="#-%e3%83%a2%e3%83%87%e3%83%ab%e5%ad%a6%e7%bf%92%e6%a9%9f%e8%83%bd%e3%81%ae%e8%a9%b3%e7%b4%b0">#</a>
+  
+</h2>
+<h3 id="1-学習対象モデル">
+  1. 学習対象モデル
+  
+  <a class="anchor" href="#1-%e5%ad%a6%e7%bf%92%e5%af%be%e8%b1%a1%e3%83%a2%e3%83%87%e3%83%ab">#</a>
+  
+</h3>
+<p>NDLOCR-Liteでは、以下の2つのモデルを独自データで学習できます：</p>
+<table>
+  <thead>
+      <tr>
+          <th>モデル</th>
+          <th>用途</th>
+          <th>元リポジトリ</th>
+          <th>学習フレームワーク</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>DEIMv2</strong></td>
+          <td>レイアウト認識（文字領域検出）</td>
+          <td><a href="https://github.com/Intellindust-AI-Lab/DEIMv2">Intellindust-AI-Lab/DEIMv2</a></td>
+          <td>PyTorch 2.0+</td>
+      </tr>
+      <tr>
+          <td><strong>PARSeq</strong></td>
+          <td>文字列認識（OCR）</td>
+          <td><a href="https://github.com/baudm/parseq">baudm/parseq</a></td>
+          <td>PyTorch 1.10+</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="2-学習用ディレクトリ構成">
+  2. 学習用ディレクトリ構成
+  
+  <a class="anchor" href="#2-%e5%ad%a6%e7%bf%92%e7%94%a8%e3%83%87%e3%82%a3%e3%83%ac%e3%82%af%e3%83%88%e3%83%aa%e6%a7%8b%e6%88%90">#</a>
+  
+</h3>
+<pre tabindex="0"><code>train/
+├── README.md                      # 学習手順ドキュメント
+├── deimv2code/                    # DEIMv2カスタマイズコード
+│   ├── part1/                     # 第1段階学習
+│   ├── part2/                     # 第2段階学習
+│   └── configs/                   # 設定ファイル
+├── parseqcode/                    # PARSeqカスタマイズコード
+│   ├── convertkotensekidata2lmdb.py  # データ→LMDB変換
+│   ├── convert2onnx.py            # 学習済モデル→ONNX変換
+│   ├── main_tiny768.yaml          # 100文字対応設定
+│   ├── main_tiny384.yaml          # 50文字対応設定
+│   └── main_tiny256.yaml          # 30文字対応設定
+├── honkoku_rawdata/               # 学習データ（行ごと切り出し画像+テキスト）
+└── data/
+    ├── train/real/                # LMDB形式学習データ
+    └── val/                       # LMDB形式検証データ
+</code></pre><h3 id="3-学習手順概要">
+  3. 学習手順（概要）
+  
+  <a class="anchor" href="#3-%e5%ad%a6%e7%bf%92%e6%89%8b%e9%a0%86%e6%a6%82%e8%a6%81">#</a>
+  
+</h3>
+<h4 id="deimv2レイアウト認識の学習">
+  DEIMv2（レイアウト認識）の学習
+  
+  <a class="anchor" href="#deimv2%e3%83%ac%e3%82%a4%e3%82%a2%e3%82%a6%e3%83%88%e8%aa%8d%e8%ad%98%e3%81%ae%e5%ad%a6%e7%bf%92">#</a>
+  
+</h4>
+<ol>
+<li><strong>第1段階</strong>: 基本モデルの学習</li>
+<li><strong>第2段階</strong>: チェックポイントからの継続学習（<code>-t</code> オプションで指定）</li>
+<li><strong>分散学習</strong>: 3つのGPUを使用した分散学習の実例あり</li>
+</ol>
+<h4 id="parseq文字列認識の学習">
+  PARSeq（文字列認識）の学習
+  
+  <a class="anchor" href="#parseq%e6%96%87%e5%ad%97%e5%88%97%e8%aa%8d%e8%ad%98%e3%81%ae%e5%ad%a6%e7%bf%92">#</a>
+  
+</h4>
+<ol>
+<li><strong>データ準備</strong>: 行ごと切り出し画像とテキストを準備</li>
+<li><strong>LMDB変換</strong>: <code>convertkotensekidata2lmdb.py</code> でLMDB形式に変換</li>
+<li><strong>学習実行</strong>: 3種類のモデルサイズ（100/50/30文字対応）で並列学習可能</li>
+<li><strong>ONNX変換</strong>: <code>convert2onnx.py</code> で学習済みモデルをONNX形式に変換</li>
+</ol>
+<hr>
+<h2 id="-外部依存関係">
+  📦 外部依存関係
+  
+  <a class="anchor" href="#-%e5%a4%96%e9%83%a8%e4%be%9d%e5%ad%98%e9%96%a2%e4%bf%82">#</a>
+  
+</h2>
+<h3 id="1-学習データセット">
+  1. 学習データセット
+  
+  <a class="anchor" href="#1-%e5%ad%a6%e7%bf%92%e3%83%87%e3%83%bc%e3%82%bf%e3%82%bb%e3%83%83%e3%83%88">#</a>
+  
+</h3>
+<h4 id="みんなで翻刻-ocr学習用データセット">
+  みんなで翻刻 OCR学習用データセット
+  
+  <a class="anchor" href="#%e3%81%bf%e3%82%93%e3%81%aa%e3%81%a7%e7%bf%bb%e5%88%bb-ocr%e5%ad%a6%e7%bf%92%e7%94%a8%e3%83%87%e3%83%bc%e3%82%bf%e3%82%bb%e3%83%83%e3%83%88">#</a>
+  
+</h4>
+<p><strong>名称</strong>: NDL古典籍OCR学習用データセット（みんなで翻刻加工データ）</p>
+<p><strong>提供元</strong>: 国立国会図書館（NDL Lab）</p>
+<p><strong>ライセンス</strong>: CC BY-SA 4.0</p>
+<p><strong>入手方法</strong>:</p>
+<ul>
+<li>GitHub: <a href="https://github.com/ndl-lab/ndl-minhon-ocrdataset">https://github.com/ndl-lab/ndl-minhon-ocrdataset</a></li>
+<li>ZIP直接ダウンロード: <a href="https://lab.ndl.go.jp/dataset/ndlkotensekiocr/ndl-minhon-ocrdataset_20240207.zip">https://lab.ndl.go.jp/dataset/ndlkotensekiocr/ndl-minhon-ocrdataset_20240207.zip</a></li>
+<li><strong>ファイルサイズ</strong>: 45MB</li>
+</ul>
+<p><strong>特徴</strong>:</p>
+<ul>
+<li>みんなで翻刻データに座標情報を紐づけて構造化</li>
+<li>v1（リニューアル前）とv2（リニューアル後）に分かれている</li>
+<li>古典籍資料のOCR学習に特化</li>
+</ul>
+<p><strong>データ形式</strong>:</p>
+<ul>
+<li>行ごとの切り出し画像</li>
+<li>対応する翻刻テキスト</li>
+<li>学習時はLMDB形式に変換して使用</li>
+</ul>
+<h3 id="2-クラウドサービス外部apiへの依存">
+  2. クラウドサービス・外部APIへの依存
+  
+  <a class="anchor" href="#2-%e3%82%af%e3%83%a9%e3%82%a6%e3%83%89%e3%82%b5%e3%83%bc%e3%83%93%e3%82%b9%e5%a4%96%e9%83%a8api%e3%81%b8%e3%81%ae%e4%be%9d%e5%ad%98">#</a>
+  
+</h3>
+<p><strong>❌ なし</strong></p>
+<p>学習処理は完全にローカルで実行されます：</p>
+<ul>
+<li>クラウドGPU（TPU、GPU as a Service等）への依存なし</li>
+<li>外部学習プラットフォーム（Google Colab、AWS SageMaker等）への依存なし</li>
+<li>学習中のデータ送信なし</li>
+</ul>
+<h3 id="3-元モデルリポジトリへの依存">
+  3. 元モデルリポジトリへの依存
+  
+  <a class="anchor" href="#3-%e5%85%83%e3%83%a2%e3%83%87%e3%83%ab%e3%83%aa%e3%83%9d%e3%82%b8%e3%83%88%e3%83%aa%e3%81%b8%e3%81%ae%e4%be%9d%e5%ad%98">#</a>
+  
+</h3>
+<h4 id="deimv2">
+  DEIMv2
+  
+  <a class="anchor" href="#deimv2">#</a>
+  
+</h4>
+<p><strong>リポジトリ</strong>: <a href="https://github.com/Intellindust-AI-Lab/DEIMv2">https://github.com/Intellindust-AI-Lab/DEIMv2</a></p>
+<p><strong>特徴</strong>:</p>
+<ul>
+<li>DINOv3バックボーンを使用したリアルタイム物体検出モデル</li>
+<li>COCO2017データセットでの学習例あり</li>
+<li>S-sizedモデルでCOCO 50 AP超えを達成</li>
+</ul>
+<p><strong>学習要件</strong>:</p>
+<ul>
+<li>PyTorch 2.0以上</li>
+<li>CUDA対応GPU</li>
+<li>COCO形式のアノテーションデータ</li>
+</ul>
+<h4 id="parseq">
+  PARSeq
+  
+  <a class="anchor" href="#parseq">#</a>
+  
+</h4>
+<p><strong>リポジトリ</strong>: <a href="https://github.com/baudm/parseq">https://github.com/baudm/parseq</a></p>
+<p><strong>特徴</strong>:</p>
+<ul>
+<li>Permuted Autoregressive Sequence Modelsを用いたシーンテキスト認識</li>
+<li>ECCV 2022で発表</li>
+<li>双方向コンテキストによる反復予測改良機能</li>
+</ul>
+<p><strong>学習要件</strong>:</p>
+<ul>
+<li>Python 3.7以上</li>
+<li>PyTorch 1.10以上（PyTorch 2.0、Lightning 2.0対応）</li>
+<li>train.pyスクリプトで任意のサポート済みモデルを学習可能</li>
+</ul>
+<hr>
+<h2 id="-学習環境の要件">
+  🖥️ 学習環境の要件
+  
+  <a class="anchor" href="#-%e5%ad%a6%e7%bf%92%e7%92%b0%e5%a2%83%e3%81%ae%e8%a6%81%e4%bb%b6">#</a>
+  
+</h2>
+<h3 id="1-ハードウェア要件">
+  1. ハードウェア要件
+  
+  <a class="anchor" href="#1-%e3%83%8f%e3%83%bc%e3%83%89%e3%82%a6%e3%82%a7%e3%82%a2%e8%a6%81%e4%bb%b6">#</a>
+  
+</h3>
+<h4 id="gpu必須">
+  GPU（必須）
+  
+  <a class="anchor" href="#gpu%e5%bf%85%e9%a0%88">#</a>
+  
+</h4>
+<p><strong>種類</strong>: CUDA対応NVIDIA GPU</p>
+<p><strong>理由</strong>:</p>
+<ul>
+<li>PyTorch 2.5.1とCUDA 12.1を使用</li>
+<li>ディープラーニングモデルの学習にはGPU必須</li>
+</ul>
+<p><strong>推奨構成</strong>:</p>
+<ul>
+<li><strong>DEIMv2</strong>: 3つのGPUを使用した分散学習の実例あり</li>
+<li><strong>PARSeq</strong>: 最低1GPU（詳細な推奨スペックは不明）</li>
+</ul>
+<p><strong>CPU学習の可否</strong>: 理論上は可能だが、学習時間が膨大になるため非現実的</p>
+<h4 id="メモリストレージ">
+  メモリ・ストレージ
+  
+  <a class="anchor" href="#%e3%83%a1%e3%83%a2%e3%83%aa%e3%82%b9%e3%83%88%e3%83%ac%e3%83%bc%e3%82%b8">#</a>
+  
+</h4>
+<ul>
+<li><strong>RAM</strong>: 16GB以上推奨（GPU VRAMとは別）</li>
+<li><strong>ストレージ</strong>:
+<ul>
+<li>データセット: 45MB（みんなで翻刻）</li>
+<li>ライブラリ・依存関係: 数GB（PyTorch、CUDA等）</li>
+<li>学習済みモデル保存: 数百MB〜数GB</li>
+<li><strong>推奨合計</strong>: 20GB以上の空き容量</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-ソフトウェア要件">
+  2. ソフトウェア要件
+  
+  <a class="anchor" href="#2-%e3%82%bd%e3%83%95%e3%83%88%e3%82%a6%e3%82%a7%e3%82%a2%e8%a6%81%e4%bb%b6">#</a>
+  
+</h3>
+<h4 id="必須ライブラリ">
+  必須ライブラリ
+  
+  <a class="anchor" href="#%e5%bf%85%e9%a0%88%e3%83%a9%e3%82%a4%e3%83%96%e3%83%a9%e3%83%aa">#</a>
+  
+</h4>
+<table>
+  <thead>
+      <tr>
+          <th>種別</th>
+          <th>ライブラリ</th>
+          <th>バージョン</th>
+          <th>用途</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>機械学習</td>
+          <td>PyTorch</td>
+          <td>2.0以上（2.5.1推奨）</td>
+          <td>モデル学習</td>
+      </tr>
+      <tr>
+          <td>GPU</td>
+          <td>CUDA</td>
+          <td>12.1</td>
+          <td>GPU計算</td>
+      </tr>
+      <tr>
+          <td>画像処理</td>
+          <td>torchvision</td>
+          <td>-</td>
+          <td>画像処理</td>
+      </tr>
+      <tr>
+          <td>評価</td>
+          <td>faster-coco-eval</td>
+          <td>-</td>
+          <td>DEIMv2評価</td>
+      </tr>
+      <tr>
+          <td>設定管理</td>
+          <td>PyYAML</td>
+          <td>-</td>
+          <td>設定ファイル読み込み</td>
+      </tr>
+      <tr>
+          <td>ログ</td>
+          <td>tensorboard</td>
+          <td>-</td>
+          <td>学習ログ可視化</td>
+      </tr>
+      <tr>
+          <td>データベース</td>
+          <td>LMDB</td>
+          <td>-</td>
+          <td>PARSeqデータ保存</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="python環境">
+  Python環境
+  
+  <a class="anchor" href="#python%e7%92%b0%e5%a2%83">#</a>
+  
+</h4>
+<ul>
+<li><strong>Python</strong>: 3.7以上（3.11推奨）</li>
+<li><strong>パッケージ管理</strong>: pip、conda</li>
+</ul>
+<h3 id="3-完全オフライン環境での学習可否">
+  3. 完全オフライン環境での学習可否
+  
+  <a class="anchor" href="#3-%e5%ae%8c%e5%85%a8%e3%82%aa%e3%83%95%e3%83%a9%e3%82%a4%e3%83%b3%e7%92%b0%e5%a2%83%e3%81%a7%e3%81%ae%e5%ad%a6%e7%bf%92%e5%8f%af%e5%90%a6">#</a>
+  
+</h3>
+<h4 id="-可能初回セットアップ後">
+  ✅ 可能（初回セットアップ後）
+  
+  <a class="anchor" href="#-%e5%8f%af%e8%83%bd%e5%88%9d%e5%9b%9e%e3%82%bb%e3%83%83%e3%83%88%e3%82%a2%e3%83%83%e3%83%97%e5%be%8c">#</a>
+  
+</h4>
+<p><strong>前提条件</strong>:</p>
+<ol>
+<li>
+<p><strong>オンライン環境で初回セットアップを完了</strong>（以下の作業）:</p>
+<ul>
+<li>リポジトリクローン: <code>git clone https://github.com/ndl-lab/ndlocr-lite.git</code></li>
+<li>依存ライブラリインストール: <code>pip install -r requirements.txt</code></li>
+<li>学習データセットダウンロード: みんなで翻刻（45MB ZIP）</li>
+<li>元モデルリポジトリのクローン（DEIMv2、PARSeq）</li>
+</ul>
+</li>
+<li>
+<p><strong>セットアップ完了後</strong>:</p>
+<ul>
+<li>インターネット接続を切断</li>
+<li>オフライン環境に移動（環境ごとコピー）</li>
+</ul>
+</li>
+<li>
+<p><strong>オフライン環境で学習実行</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># DEIMv2学習（例）</span>
+</span></span><span style="display:flex;"><span>cd train/deimv2code/part1
+</span></span><span style="display:flex;"><span>python train.py --config configs/ndl_deimv2/deimv2_dinov3_s_coco_r4_800.yml
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># PARSeq学習（例）</span>
+</span></span><span style="display:flex;"><span>cd train/parseqcode
+</span></span><span style="display:flex;"><span>python train.py main_tiny768.yaml
+</span></span></code></pre></div></li>
+</ol>
+<hr>
+<h2 id="-学習から推論までのパイプライン">
+  🔄 学習から推論までのパイプライン
+  
+  <a class="anchor" href="#-%e5%ad%a6%e7%bf%92%e3%81%8b%e3%82%89%e6%8e%a8%e8%ab%96%e3%81%be%e3%81%a7%e3%81%ae%e3%83%91%e3%82%a4%e3%83%97%e3%83%a9%e3%82%a4%e3%83%b3">#</a>
+  
+</h2>
+<h3 id="全体の流れ">
+  全体の流れ
+  
+  <a class="anchor" href="#%e5%85%a8%e4%bd%93%e3%81%ae%e6%b5%81%e3%82%8c">#</a>
+  
+</h3>
+<pre tabindex="0"><code>1. データ準備
+   ↓
+2. モデル学習（PyTorchフレームワーク）
+   ↓
+3. ONNX変換（convert2onnx.py）
+   ↓
+4. ONNX推論（ndlocr-lite本体で使用）
+</code></pre><h3 id="onnx形式について">
+  ONNX形式について
+  
+  <a class="anchor" href="#onnx%e5%bd%a2%e5%bc%8f%e3%81%ab%e3%81%a4%e3%81%84%e3%81%a6">#</a>
+  
+</h3>
+<p><strong>ONNX（Open Neural Network Exchange）</strong>:</p>
+<ul>
+<li><strong>目的</strong>: 機械学習モデルの相互運用性を実現</li>
+<li><strong>利点</strong>:
+<ul>
+<li>軽量・高速な推論実行</li>
+<li>GPU不要での実行が可能</li>
+<li>複数のフレームワーク（PyTorch、TensorFlow等）からエクスポート可能</li>
+</ul>
+</li>
+</ul>
+<p><strong>NDLOCR-Liteでの利用</strong>:</p>
+<ul>
+<li><strong>学習時</strong>: PyTorchフレームワークで学習</li>
+<li><strong>推論時</strong>: ONNX Runtime（CPU/GPU両対応）で推論</li>
+<li><strong>変換</strong>: <code>convert2onnx.py</code> で学習済みPyTorchモデル→ONNX形式に変換</li>
+</ul>
+<p><strong>推論専用か？</strong>:</p>
+<ul>
+<li>❌ ONNX形式自体は推論専用</li>
+<li>✅ ただし、学習→ONNX変換のパイプラインが完備されている</li>
+<li>✅ 学習はPyTorchで行い、デプロイ時にONNXに変換する設計</li>
+</ul>
+<hr>
+<h2 id="-ndlocr本体フル版との比較">
+  🔗 NDLOCR本体（フル版）との比較
+  
+  <a class="anchor" href="#-ndlocr%e6%9c%ac%e4%bd%93%e3%83%95%e3%83%ab%e7%89%88%e3%81%a8%e3%81%ae%e6%af%94%e8%bc%83">#</a>
+  
+</h2>
+<h3 id="ndlocrフル版">
+  NDLOCRフル版
+  
+  <a class="anchor" href="#ndlocr%e3%83%95%e3%83%ab%e7%89%88">#</a>
+  
+</h3>
+<p><strong>リポジトリ</strong>: <a href="https://github.com/ndl-lab/ndlocr_cli">https://github.com/ndl-lab/ndlocr_cli</a></p>
+<p><strong>学習機能</strong>: あり</p>
+<ul>
+<li>テキスト認識モジュール: <a href="https://github.com/ndl-lab/text_recognition_lightning">https://github.com/ndl-lab/text_recognition_lightning</a></li>
+<li>古典籍OCR学習スクリプト: <a href="https://github.com/ndl-lab/ndlkotenocr_cli/blob/master/src/text_kotenseki_recognition/train.py">https://github.com/ndl-lab/ndlkotenocr_cli/blob/master/src/text_kotenseki_recognition/train.py</a></li>
+</ul>
+<p><strong>違い</strong>:</p>
+<table>
+  <thead>
+      <tr>
+          <th>項目</th>
+          <th>NDLOCR-Lite</th>
+          <th>NDLOCRフル版</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>GPU要件</strong></td>
+          <td>学習時のみ必須、推論時は不要</td>
+          <td>推論時もGPU推奨</td>
+      </tr>
+      <tr>
+          <td><strong>対象ユーザー</strong></td>
+          <td>一般ユーザー・ライトユース</td>
+          <td>研究者・大規模処理</td>
+      </tr>
+      <tr>
+          <td><strong>学習機能</strong></td>
+          <td>✅ あり（train/）</td>
+          <td>✅ あり</td>
+      </tr>
+      <tr>
+          <td><strong>推論速度</strong></td>
+          <td>CPU対応、軽量</td>
+          <td>GPU使用、高速</td>
+      </tr>
+      <tr>
+          <td><strong>精度</strong></td>
+          <td>軽量版（実用レベル）</td>
+          <td>高精度</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="-結論">
+  ✅ 結論
+  
+  <a class="anchor" href="#-%e7%b5%90%e8%ab%96">#</a>
+  
+</h2>
+<h3 id="モデル学習機能の有無-1">
+  モデル学習機能の有無
+  
+  <a class="anchor" href="#%e3%83%a2%e3%83%87%e3%83%ab%e5%ad%a6%e7%bf%92%e6%a9%9f%e8%83%bd%e3%81%ae%e6%9c%89%e7%84%a1-1">#</a>
+  
+</h3>
+<p><strong>✅ Yes — 完全な学習機能あり</strong></p>
+<p>NDLOCR-Liteは、以下の学習機能を提供しています：</p>
+<ol>
+<li>
+<p>✅ <strong>独自データセットでのファインチューニングが可能</strong></p>
+<ul>
+<li>みんなで翻刻データセットを使用</li>
+<li>LMDB形式に変換して学習</li>
+</ul>
+</li>
+<li>
+<p>✅ <strong>新規モデルのトレーニング機能あり</strong></p>
+<ul>
+<li>DEIMv2（レイアウト認識）</li>
+<li>PARSeq（文字列認識）</li>
+</ul>
+</li>
+<li>
+<p>✅ <strong>学習用のスクリプト・ドキュメントあり</strong></p>
+<ul>
+<li><code>train/README.md</code> に詳細手順記載</li>
+<li><code>train/deimv2code/</code>、<code>train/parseqcode/</code> に学習スクリプト</li>
+<li><code>convertkotensekidata2lmdb.py</code>（データ変換）、<code>convert2onnx.py</code>（ONNX変換）</li>
+</ul>
+</li>
+</ol>
+<h3 id="ローカルで完結するか-1">
+  ローカルで完結するか
+  
+  <a class="anchor" href="#%e3%83%ad%e3%83%bc%e3%82%ab%e3%83%ab%e3%81%a7%e5%ae%8c%e7%b5%90%e3%81%99%e3%82%8b%e3%81%8b-1">#</a>
+  
+</h3>
+<p><strong>⚠️ 条件付きYes — 初回セットアップ時のみインターネット接続が必要</strong></p>
+<h4 id="初回セットアップ時インターネット接続必須">
+  初回セットアップ時（インターネット接続必須）
+  
+  <a class="anchor" href="#%e5%88%9d%e5%9b%9e%e3%82%bb%e3%83%83%e3%83%88%e3%82%a2%e3%83%83%e3%83%97%e6%99%82%e3%82%a4%e3%83%b3%e3%82%bf%e3%83%bc%e3%83%8d%e3%83%83%e3%83%88%e6%8e%a5%e7%b6%9a%e5%bf%85%e9%a0%88">#</a>
+  
+</h4>
+<table>
+  <thead>
+      <tr>
+          <th>項目</th>
+          <th>内容</th>
+          <th>理由</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>リポジトリクローン</td>
+          <td>GitHubからクローン</td>
+          <td>ソースコード取得</td>
+      </tr>
+      <tr>
+          <td>依存ライブラリインストール</td>
+          <td>pip install</td>
+          <td>PyTorch、CUDA等のインストール</td>
+      </tr>
+      <tr>
+          <td>学習データセットダウンロード</td>
+          <td>みんなで翻刻（45MB）</td>
+          <td>学習用データ取得</td>
+      </tr>
+      <tr>
+          <td>元モデルリポジトリ取得</td>
+          <td>DEIMv2、PARSeq</td>
+          <td>カスタマイズベース取得</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="学習実行時オフライン可能">
+  学習実行時（オフライン可能）
+  
+  <a class="anchor" href="#%e5%ad%a6%e7%bf%92%e5%ae%9f%e8%a1%8c%e6%99%82%e3%82%aa%e3%83%95%e3%83%a9%e3%82%a4%e3%83%b3%e5%8f%af%e8%83%bd">#</a>
+  
+</h4>
+<table>
+  <thead>
+      <tr>
+          <th>項目</th>
+          <th>状態</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>インターネット接続</td>
+          <td>❌ 不要</td>
+      </tr>
+      <tr>
+          <td>クラウドサービス</td>
+          <td>❌ 依存なし</td>
+      </tr>
+      <tr>
+          <td>データ送信</td>
+          <td>❌ なし</td>
+      </tr>
+      <tr>
+          <td>ローカル完結性</td>
+          <td>✅ 完全にローカルで完結</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="学習に必要な環境要件">
+  学習に必要な環境・要件
+  
+  <a class="anchor" href="#%e5%ad%a6%e7%bf%92%e3%81%ab%e5%bf%85%e8%a6%81%e3%81%aa%e7%92%b0%e5%a2%83%e8%a6%81%e4%bb%b6">#</a>
+  
+</h3>
+<h4 id="ハードウェア必須">
+  ハードウェア（必須）
+  
+  <a class="anchor" href="#%e3%83%8f%e3%83%bc%e3%83%89%e3%82%a6%e3%82%a7%e3%82%a2%e5%bf%85%e9%a0%88">#</a>
+  
+</h4>
+<ul>
+<li><strong>GPU</strong>: CUDA対応NVIDIA GPU（DEIMv2では3GPU推奨の分散学習例あり）</li>
+<li><strong>RAM</strong>: 16GB以上推奨</li>
+<li><strong>ストレージ</strong>: 20GB以上の空き容量</li>
+</ul>
+<h4 id="ソフトウェア必須">
+  ソフトウェア（必須）
+  
+  <a class="anchor" href="#%e3%82%bd%e3%83%95%e3%83%88%e3%82%a6%e3%82%a7%e3%82%a2%e5%bf%85%e9%a0%88">#</a>
+  
+</h4>
+<ul>
+<li><strong>Python</strong>: 3.7以上（3.11推奨）</li>
+<li><strong>PyTorch</strong>: 2.0以上（2.5.1推奨）</li>
+<li><strong>CUDA</strong>: 12.1</li>
+<li><strong>その他</strong>: torchvision、PyYAML、tensorboard、LMDB等</li>
+</ul>
+<h4 id="データセット必須">
+  データセット（必須）
+  
+  <a class="anchor" href="#%e3%83%87%e3%83%bc%e3%82%bf%e3%82%bb%e3%83%83%e3%83%88%e5%bf%85%e9%a0%88">#</a>
+  
+</h4>
+<ul>
+<li><strong>みんなで翻刻</strong>: 45MB、CC BY-SA 4.0ライセンス</li>
+<li><strong>入手先</strong>: <a href="https://github.com/ndl-lab/ndl-minhon-ocrdataset">https://github.com/ndl-lab/ndl-minhon-ocrdataset</a></li>
+</ul>
+<h4 id="オフライン学習の可否">
+  オフライン学習の可否
+  
+  <a class="anchor" href="#%e3%82%aa%e3%83%95%e3%83%a9%e3%82%a4%e3%83%b3%e5%ad%a6%e7%bf%92%e3%81%ae%e5%8f%af%e5%90%a6">#</a>
+  
+</h4>
+<ul>
+<li>✅ <strong>可能</strong>（初回セットアップ後）</li>
+<li>⚠️ 初回セットアップ時のみインターネット接続必須</li>
+</ul>
+<hr>
+<h2 id="-参考資料">
+  📚 参考資料
+  
+  <a class="anchor" href="#-%e5%8f%82%e8%80%83%e8%b3%87%e6%96%99">#</a>
+  
+</h2>
+<h3 id="ndlocr-lite関連">
+  NDLOCR-Lite関連
+  
+  <a class="anchor" href="#ndlocr-lite%e9%96%a2%e9%80%a3">#</a>
+  
+</h3>
+<ol>
+<li><a href="https://github.com/ndl-lab/ndlocr-lite">GitHub - ndl-lab/ndlocr-lite</a></li>
+<li><a href="https://github.com/ndl-lab/ndlocr-lite/blob/master/train/README.md">train/README.md - ndlocr-lite</a></li>
+</ol>
+<h3 id="学習データセット">
+  学習データセット
+  
+  <a class="anchor" href="#%e5%ad%a6%e7%bf%92%e3%83%87%e3%83%bc%e3%82%bf%e3%82%bb%e3%83%83%e3%83%88">#</a>
+  
+</h3>
+<ol start="3">
+<li><a href="https://github.com/ndl-lab/ndl-minhon-ocrdataset">GitHub - ndl-lab/ndl-minhon-ocrdataset</a></li>
+<li><a href="https://lab.ndl.go.jp/data_set/ocr/r3_text/">OCR学習用データセット - NDLラボ</a></li>
+</ol>
+<h3 id="元モデルリポジトリ">
+  元モデルリポジトリ
+  
+  <a class="anchor" href="#%e5%85%83%e3%83%a2%e3%83%87%e3%83%ab%e3%83%aa%e3%83%9d%e3%82%b8%e3%83%88%e3%83%aa">#</a>
+  
+</h3>
+<ol start="5">
+<li><a href="https://github.com/Intellindust-AI-Lab/DEIMv2">GitHub - Intellindust-AI-Lab/DEIMv2</a></li>
+<li><a href="https://intellindust-ai-lab.github.io/projects/DEIMv2/">DEIMv2公式ページ</a></li>
+<li><a href="https://github.com/baudm/parseq">GitHub - baudm/parseq</a></li>
+<li><a href="https://arxiv.org/abs/2207.06966">PARSeq論文（ECCV 2022）</a></li>
+</ol>
+<h3 id="ndlocrフル版-1">
+  NDLOCRフル版
+  
+  <a class="anchor" href="#ndlocr%e3%83%95%e3%83%ab%e7%89%88-1">#</a>
+  
+</h3>
+<ol start="9">
+<li><a href="https://github.com/ndl-lab/ndlocr_cli">GitHub - ndl-lab/ndlocr_cli</a></li>
+<li><a href="https://github.com/ndl-lab/text_recognition_lightning">GitHub - ndl-lab/text_recognition_lightning</a></li>
+</ol>
+<hr>
+<p><strong>調査完了日時</strong>: 2026-02-26 15:00
+<strong>調査担当</strong>: 秘書1 ひなた
+<strong>次のアクション</strong>: 副室長 凛へ報告</p>
+</div>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+
+<aside class="book-toc">
+  <div class="book-toc-content">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#ndlocr-lite-モデル学習機能調査レポート">NDLOCR-Lite モデル学習機能調査レポート</a>
+      <ul>
+        <li><a href="#-調査結果サマリー">📊 調査結果サマリー</a>
+          <ul>
+            <li><a href="#モデル学習機能の有無">モデル学習機能の有無</a></li>
+            <li><a href="#ローカルで完結するか">ローカルで完結するか</a></li>
+          </ul>
+        </li>
+        <li><a href="#-モデル学習機能の詳細">🔍 モデル学習機能の詳細</a>
+          <ul>
+            <li><a href="#1-学習対象モデル">1. 学習対象モデル</a></li>
+            <li><a href="#2-学習用ディレクトリ構成">2. 学習用ディレクトリ構成</a></li>
+            <li><a href="#3-学習手順概要">3. 学習手順（概要）</a>
+              <ul>
+                <li><a href="#deimv2レイアウト認識の学習">DEIMv2（レイアウト認識）の学習</a></li>
+                <li><a href="#parseq文字列認識の学習">PARSeq（文字列認識）の学習</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#-外部依存関係">📦 外部依存関係</a>
+          <ul>
+            <li><a href="#1-学習データセット">1. 学習データセット</a>
+              <ul>
+                <li><a href="#みんなで翻刻-ocr学習用データセット">みんなで翻刻 OCR学習用データセット</a></li>
+              </ul>
+            </li>
+            <li><a href="#2-クラウドサービス外部apiへの依存">2. クラウドサービス・外部APIへの依存</a></li>
+            <li><a href="#3-元モデルリポジトリへの依存">3. 元モデルリポジトリへの依存</a>
+              <ul>
+                <li><a href="#deimv2">DEIMv2</a></li>
+                <li><a href="#parseq">PARSeq</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#-学習環境の要件">🖥️ 学習環境の要件</a>
+          <ul>
+            <li><a href="#1-ハードウェア要件">1. ハードウェア要件</a>
+              <ul>
+                <li><a href="#gpu必須">GPU（必須）</a></li>
+                <li><a href="#メモリストレージ">メモリ・ストレージ</a></li>
+              </ul>
+            </li>
+            <li><a href="#2-ソフトウェア要件">2. ソフトウェア要件</a>
+              <ul>
+                <li><a href="#必須ライブラリ">必須ライブラリ</a></li>
+                <li><a href="#python環境">Python環境</a></li>
+              </ul>
+            </li>
+            <li><a href="#3-完全オフライン環境での学習可否">3. 完全オフライン環境での学習可否</a>
+              <ul>
+                <li><a href="#-可能初回セットアップ後">✅ 可能（初回セットアップ後）</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#-学習から推論までのパイプライン">🔄 学習から推論までのパイプライン</a>
+          <ul>
+            <li><a href="#全体の流れ">全体の流れ</a></li>
+            <li><a href="#onnx形式について">ONNX形式について</a></li>
+          </ul>
+        </li>
+        <li><a href="#-ndlocr本体フル版との比較">🔗 NDLOCR本体（フル版）との比較</a>
+          <ul>
+            <li><a href="#ndlocrフル版">NDLOCRフル版</a></li>
+          </ul>
+        </li>
+        <li><a href="#-結論">✅ 結論</a>
+          <ul>
+            <li><a href="#モデル学習機能の有無-1">モデル学習機能の有無</a></li>
+            <li><a href="#ローカルで完結するか-1">ローカルで完結するか</a>
+              <ul>
+                <li><a href="#初回セットアップ時インターネット接続必須">初回セットアップ時（インターネット接続必須）</a></li>
+                <li><a href="#学習実行時オフライン可能">学習実行時（オフライン可能）</a></li>
+              </ul>
+            </li>
+            <li><a href="#学習に必要な環境要件">学習に必要な環境・要件</a>
+              <ul>
+                <li><a href="#ハードウェア必須">ハードウェア（必須）</a></li>
+                <li><a href="#ソフトウェア必須">ソフトウェア（必須）</a></li>
+                <li><a href="#データセット必須">データセット（必須）</a></li>
+                <li><a href="#オフライン学習の可否">オフライン学習の可否</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#-参考資料">📚 参考資料</a>
+          <ul>
+            <li><a href="#ndlocr-lite関連">NDLOCR-Lite関連</a></li>
+            <li><a href="#学習データセット">学習データセット</a></li>
+            <li><a href="#元モデルリポジトリ">元モデルリポジトリ</a></li>
+            <li><a href="#ndlocrフル版-1">NDLOCRフル版</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </div>
+</aside>
+
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

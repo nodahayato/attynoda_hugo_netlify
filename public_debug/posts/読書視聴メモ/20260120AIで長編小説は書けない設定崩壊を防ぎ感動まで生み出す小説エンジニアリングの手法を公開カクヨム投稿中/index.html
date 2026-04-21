@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AIで長編小説は書けない？設定崩壊を防ぎ、感動まで生み出す「小説エンジニアリング」の手法を公開【カクヨム投稿中】">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="/posts/%E8%AA%AD%E6%9B%B8%E8%A6%96%E8%81%B4%E3%83%A1%E3%83%A2/20260120AI%E3%81%A7%E9%95%B7%E7%B7%A8%E5%B0%8F%E8%AA%AC%E3%81%AF%E6%9B%B8%E3%81%91%E3%81%AA%E3%81%84%E8%A8%AD%E5%AE%9A%E5%B4%A9%E5%A3%8A%E3%82%92%E9%98%B2%E3%81%8E%E6%84%9F%E5%8B%95%E3%81%BE%E3%81%A7%E7%94%9F%E3%81%BF%E5%87%BA%E3%81%99%E5%B0%8F%E8%AA%AC%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%8B%E3%82%A2%E3%83%AA%E3%83%B3%E3%82%B0%E3%81%AE%E6%89%8B%E6%B3%95%E3%82%92%E5%85%AC%E9%96%8B%E3%82%AB%E3%82%AF%E3%83%A8%E3%83%A0%E6%8A%95%E7%A8%BF%E4%B8%AD/">
+  <meta property="og:site_name" content="Knowlegdebase of 弁護士 野田隼人">
+  <meta property="og:title" content="AIで長編小説は書けない？設定崩壊を防ぎ、感動まで生み出す「小説エンジニアリング」の手法を公開【カクヨム投稿中】">
+  <meta property="og:description" content="https://www.youtube.com/watch?v=vspN8atlMzk
+AIで長編小説は書けない？設定崩壊を防ぎ、感動まで生み出す「小説エンジニアリング」の手法を公開【カクヨム投稿中】 # 動画分析:AIによる長編小説執筆手法 # 1. 概要 # 投稿者のAliceは、AIを使って長編ライトノベルを執筆する手法「Wonderland Engine」を紹介しています。彼女は「カクヨム」に既に3作品を投稿しており、特に「無能と蔑まれた鑑定士」が好評を得ています。現在は10部構成・100万文字を目指す「レベルブレイカー」を執筆中です。
+2. 主要なポイント # Wonderland Engineのシステム構造 # 3つのコアJSONファイル:
+Canon Bible(正典): AIが絶対に破ってはいけない設定・ルールを記載した「憲法」 Plot Master: 章ごとの大まかなプロット、キャラクター動線、意図的な挫折シーンの計画 伏線管理チェックリスト: どの章で伏線を張り、どの章で回収するかを管理 執筆プロセス(3ステップ) # 詳細なシーンリスト作成 シーンリストに基づいた本文執筆 Story State(物語の状態)を記録・更新 AI使い分け戦略 # Claude 4.5 Opus: 創造性・世界観構築 ChatGPT: JSON変換などの精密処理 使用制限に達した場合でもJSONファイルがあれば別環境で継続可能 実績 # 最初のプロトタイプ(13章、68,000文字)を約4時間で完成(実作業30分) 設定の一貫性を維持しながら、感動的なシーンまで生成できた 現在はバージョン3に進化し、3層構造で一貫性を強化 3. 重要な洞察 # 「小説エンジニアリング」というアプローチ # Aliceは自身を「小説家」ではなく「Novel Engineer(小説エンジニア)」と位置づけ、手書き作家への敬意を示しつつ、AIを使った創作手法を探求する姿勢を明確にしています。
+システム化の重要性 # 「物語を書くのではなく、システムとして構築する」という発想転換により、AI特有の問題(設定忘れ、キャラクター崩壊、矛盾)を克服しました。
+汎用性 # プロトタイプは『不思議の国のアリス』のパロディで作りやすかった面もあるが、システム自体は汎用的で、異なるジャンルにも適用可能と評価しています。">
+  <meta property="og:locale" content="ja">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-20T00:00:00+09:00">
+    <meta property="article:modified_time" content="2026-01-20T00:00:00+09:00">
+<title>AIで長編小説は書けない？設定崩壊を防ぎ、感動まで生み出す「小説エンジニアリング」の手法を公開【カクヨム投稿中】 | Knowlegdebase of 弁護士 野田隼人</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="/posts/%E8%AA%AD%E6%9B%B8%E8%A6%96%E8%81%B4%E3%83%A1%E3%83%A2/20260120AI%E3%81%A7%E9%95%B7%E7%B7%A8%E5%B0%8F%E8%AA%AC%E3%81%AF%E6%9B%B8%E3%81%91%E3%81%AA%E3%81%84%E8%A8%AD%E5%AE%9A%E5%B4%A9%E5%A3%8A%E3%82%92%E9%98%B2%E3%81%8E%E6%84%9F%E5%8B%95%E3%81%BE%E3%81%A7%E7%94%9F%E3%81%BF%E5%87%BA%E3%81%99%E5%B0%8F%E8%AA%AC%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%8B%E3%82%A2%E3%83%AA%E3%83%B3%E3%82%B0%E3%81%AE%E6%89%8B%E6%B3%95%E3%82%92%E5%85%AC%E9%96%8B%E3%82%AB%E3%82%AF%E3%83%A8%E3%83%A0%E6%8A%95%E7%A8%BF%E4%B8%AD/">
+<link rel="stylesheet" href="/book.min.bad7fde131c1ff4f3079703b4cc8e1c8fbdd92ecee65a2dc19b7572d2bf6ec8b.css" >
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/ja.search.min.66f033ac8e3ef71030409eb3795e3f8bce487aa76bd68a6600263afb4297c958.js" ></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-posts">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Knowlegdebase of 弁護士 野田隼人</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input type="text" id="book-search-input" placeholder="検索" aria-label="検索" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/categories/" >
+        カテゴリ
+      </a>
+      
+<ul>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/" >
+        フィリピン法に関する情報
+      </a>
+      
+<ul>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E3%81%AE%E6%B3%95%E4%BB%A4/" >
+        フィリピンの法令
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%83%A1%E3%83%A2/" >
+        フィリピン法メモ
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E3%81%AE%E8%A3%81%E5%88%A4%E4%BE%8B/" >
+        フィリピンの裁判例
+      </a>
+  </li>
+  
+</ul>
+
+  </li>
+  
+  <li>
+    <a href="/categories/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%94%E3%83%B3%E4%B8%80%E8%88%AC/" >
+        フィリピン一般
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/" >
+        日本法に関する情報
+      </a>
+      
+<ul>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E6%97%A5%E6%9C%AC%E3%81%AE%E6%B3%95%E4%BB%A4/" >
+        日本の法令
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%83%A1%E3%83%A2/" >
+        日本法メモ
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E6%97%A5%E6%9C%AC%E6%B3%95%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E6%83%85%E5%A0%B1/%E6%97%A5%E6%9C%AC%E3%81%AE%E8%A3%81%E5%88%A4%E4%BE%8B/" >
+        日本の裁判例
+      </a>
+  </li>
+  
+</ul>
+
+  </li>
+  
+  <li>
+    <a href="/categories/%E7%9B%B8%E7%B6%9A%E6%89%8B%E7%B6%9A/" >
+        相続手続
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E5%88%91%E4%BA%8B%E5%BC%81%E8%AD%B7/" >
+        刑事弁護
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E9%9B%91%E8%A8%98/" >
+        雑記
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/app/" >
+        app
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/AI/" >
+        AI
+      </a>
+  </li>
+  
+  <li>
+    <a href="/categories/%E8%AA%AD%E6%9B%B8%E8%A6%96%E8%81%B4%E3%83%A1%E3%83%A2/" >
+        読書視聴メモ
+      </a>
+  </li>
+  
+</ul>
+
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <div class="book-header-content">
+    <div class="book-header-site-title">
+      <a href="/">Knowlegdebase of 弁護士 野田隼人</a>
+    </div>
+    <h3>AIで長編小説は書けない？設定崩壊を防ぎ、感動まで生み出す「小説エンジニアリング」の手法を公開【カクヨム投稿中】</h3>
+  </div>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#aiで長編小説は書けない設定崩壊を防ぎ感動まで生み出す小説エンジニアリングの手法を公開カクヨム投稿中">AIで長編小説は書けない？設定崩壊を防ぎ、感動まで生み出す「小説エンジニアリング」の手法を公開【カクヨム投稿中】</a></li>
+    <li><a href="#動画分析aiによる長編小説執筆手法">動画分析:AIによる長編小説執筆手法</a>
+      <ul>
+        <li><a href="#1-概要">1. 概要</a></li>
+        <li><a href="#2-主要なポイント">2. 主要なポイント</a>
+          <ul>
+            <li><a href="#wonderland-engineのシステム構造">Wonderland Engineのシステム構造</a></li>
+            <li><a href="#執筆プロセス3ステップ">執筆プロセス(3ステップ)</a></li>
+            <li><a href="#ai使い分け戦略">AI使い分け戦略</a></li>
+            <li><a href="#実績">実績</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-重要な洞察">3. 重要な洞察</a>
+          <ul>
+            <li><a href="#小説エンジニアリングというアプローチ">「小説エンジニアリング」というアプローチ</a></li>
+            <li><a href="#システム化の重要性">システム化の重要性</a></li>
+            <li><a href="#汎用性">汎用性</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-印象的な発言">4. 印象的な発言</a></li>
+        <li><a href="#5-今後の展望">5. 今後の展望</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+<article class="markdown book-post">
+  <h1>
+    AIで長編小説は書けない？設定崩壊を防ぎ、感動まで生み出す「小説エンジニアリング」の手法を公開【カクヨム投稿中】
+  </h1>
+  
+  <div class="flex align-center text-small book-post-date">
+    <img src="/svg/calendar.svg" class="book-icon " alt="" />
+    <span>1月 20, 2026</span>
+  </div>
+
+
+
+  
+  <div class="text-small">
+    
+      <a href="/categories/%E8%AA%AD%E6%9B%B8%E8%A6%96%E8%81%B4%E3%83%A1%E3%83%A2/">読書視聴メモ</a>
+  </div>
+  
+
+
+  <div class="book-post-content"><p><a href="https://www.youtube.com/watch?v=vspN8atlMzk">https://www.youtube.com/watch?v=vspN8atlMzk</a></p>
+<h1 id="aiで長編小説は書けない設定崩壊を防ぎ感動まで生み出す小説エンジニアリングの手法を公開カクヨム投稿中">
+  AIで長編小説は書けない？設定崩壊を防ぎ、感動まで生み出す「小説エンジニアリング」の手法を公開【カクヨム投稿中】
+  
+  <a class="anchor" href="#ai%e3%81%a7%e9%95%b7%e7%b7%a8%e5%b0%8f%e8%aa%ac%e3%81%af%e6%9b%b8%e3%81%91%e3%81%aa%e3%81%84%e8%a8%ad%e5%ae%9a%e5%b4%a9%e5%a3%8a%e3%82%92%e9%98%b2%e3%81%8e%e6%84%9f%e5%8b%95%e3%81%be%e3%81%a7%e7%94%9f%e3%81%bf%e5%87%ba%e3%81%99%e5%b0%8f%e8%aa%ac%e3%82%a8%e3%83%b3%e3%82%b8%e3%83%8b%e3%82%a2%e3%83%aa%e3%83%b3%e3%82%b0%e3%81%ae%e6%89%8b%e6%b3%95%e3%82%92%e5%85%ac%e9%96%8b%e3%82%ab%e3%82%af%e3%83%a8%e3%83%a0%e6%8a%95%e7%a8%bf%e4%b8%ad">#</a>
+  
+</h1>
+<h1 id="動画分析aiによる長編小説執筆手法">
+  動画分析:AIによる長編小説執筆手法
+  
+  <a class="anchor" href="#%e5%8b%95%e7%94%bb%e5%88%86%e6%9e%90ai%e3%81%ab%e3%82%88%e3%82%8b%e9%95%b7%e7%b7%a8%e5%b0%8f%e8%aa%ac%e5%9f%b7%e7%ad%86%e6%89%8b%e6%b3%95">#</a>
+  
+</h1>
+<h2 id="1-概要">
+  1. 概要
+  
+  <a class="anchor" href="#1-%e6%a6%82%e8%a6%81">#</a>
+  
+</h2>
+<p>投稿者のAliceは、AIを使って長編ライトノベルを執筆する手法「Wonderland Engine」を紹介しています。彼女は「カクヨム」に既に3作品を投稿しており、特に「無能と蔑まれた鑑定士」が好評を得ています。現在は10部構成・100万文字を目指す「レベルブレイカー」を執筆中です。</p>
+<h2 id="2-主要なポイント">
+  2. 主要なポイント
+  
+  <a class="anchor" href="#2-%e4%b8%bb%e8%a6%81%e3%81%aa%e3%83%9d%e3%82%a4%e3%83%b3%e3%83%88">#</a>
+  
+</h2>
+<h3 id="wonderland-engineのシステム構造">
+  Wonderland Engineのシステム構造
+  
+  <a class="anchor" href="#wonderland-engine%e3%81%ae%e3%82%b7%e3%82%b9%e3%83%86%e3%83%a0%e6%a7%8b%e9%80%a0">#</a>
+  
+</h3>
+<p><strong>3つのコアJSONファイル:</strong></p>
+<ul>
+<li><strong>Canon Bible(正典)</strong>: AIが絶対に破ってはいけない設定・ルールを記載した「憲法」</li>
+<li><strong>Plot Master</strong>: 章ごとの大まかなプロット、キャラクター動線、意図的な挫折シーンの計画</li>
+<li><strong>伏線管理チェックリスト</strong>: どの章で伏線を張り、どの章で回収するかを管理</li>
+</ul>
+<h3 id="執筆プロセス3ステップ">
+  執筆プロセス(3ステップ)
+  
+  <a class="anchor" href="#%e5%9f%b7%e7%ad%86%e3%83%97%e3%83%ad%e3%82%bb%e3%82%b93%e3%82%b9%e3%83%86%e3%83%83%e3%83%97">#</a>
+  
+</h3>
+<ol>
+<li>詳細なシーンリスト作成</li>
+<li>シーンリストに基づいた本文執筆</li>
+<li>Story State(物語の状態)を記録・更新</li>
+</ol>
+<h3 id="ai使い分け戦略">
+  AI使い分け戦略
+  
+  <a class="anchor" href="#ai%e4%bd%bf%e3%81%84%e5%88%86%e3%81%91%e6%88%a6%e7%95%a5">#</a>
+  
+</h3>
+<ul>
+<li><strong>Claude 4.5 Opus</strong>: 創造性・世界観構築</li>
+<li><strong>ChatGPT</strong>: JSON変換などの精密処理</li>
+<li>使用制限に達した場合でもJSONファイルがあれば別環境で継続可能</li>
+</ul>
+<h3 id="実績">
+  実績
+  
+  <a class="anchor" href="#%e5%ae%9f%e7%b8%be">#</a>
+  
+</h3>
+<ul>
+<li>最初のプロトタイプ(13章、68,000文字)を約4時間で完成(実作業30分)</li>
+<li>設定の一貫性を維持しながら、感動的なシーンまで生成できた</li>
+<li>現在はバージョン3に進化し、3層構造で一貫性を強化</li>
+</ul>
+<h2 id="3-重要な洞察">
+  3. 重要な洞察
+  
+  <a class="anchor" href="#3-%e9%87%8d%e8%a6%81%e3%81%aa%e6%b4%9e%e5%af%9f">#</a>
+  
+</h2>
+<h3 id="小説エンジニアリングというアプローチ">
+  「小説エンジニアリング」というアプローチ
+  
+  <a class="anchor" href="#%e5%b0%8f%e8%aa%ac%e3%82%a8%e3%83%b3%e3%82%b8%e3%83%8b%e3%82%a2%e3%83%aa%e3%83%b3%e3%82%b0%e3%81%a8%e3%81%84%e3%81%86%e3%82%a2%e3%83%97%e3%83%ad%e3%83%bc%e3%83%81">#</a>
+  
+</h3>
+<p>Aliceは自身を「小説家」ではなく「Novel Engineer(小説エンジニア)」と位置づけ、手書き作家への敬意を示しつつ、AIを使った創作手法を探求する姿勢を明確にしています。</p>
+<h3 id="システム化の重要性">
+  システム化の重要性
+  
+  <a class="anchor" href="#%e3%82%b7%e3%82%b9%e3%83%86%e3%83%a0%e5%8c%96%e3%81%ae%e9%87%8d%e8%a6%81%e6%80%a7">#</a>
+  
+</h3>
+<p>「物語を書くのではなく、システムとして構築する」という発想転換により、AI特有の問題(設定忘れ、キャラクター崩壊、矛盾)を克服しました。</p>
+<h3 id="汎用性">
+  汎用性
+  
+  <a class="anchor" href="#%e6%b1%8e%e7%94%a8%e6%80%a7">#</a>
+  
+</h3>
+<p>プロトタイプは『不思議の国のアリス』のパロディで作りやすかった面もあるが、システム自体は汎用的で、異なるジャンルにも適用可能と評価しています。</p>
+<h2 id="4-印象的な発言">
+  4. 印象的な発言
+  
+  <a class="anchor" href="#4-%e5%8d%b0%e8%b1%a1%e7%9a%84%e3%81%aa%e7%99%ba%e8%a8%80">#</a>
+  
+</h2>
+
+<blockquote class='book-hint '>
+  <p>&ldquo;68,000文字の一貫性を維持できた理由は、このJSONファイルのおかげ&rdquo;</p>
+</blockquote>
+<blockquote class='book-hint '>
+  <p>&ldquo;物語を書くのではなく、システムとして構築することにした&rdquo;</p>
+</blockquote>
+<blockquote class='book-hint '>
+  <p>&ldquo;自分のAIが書いたものでクスッとすることはなかったが、この作品はクスッとするシーンをかなり書いた&rdquo;</p>
+</blockquote>
+<blockquote class='book-hint '>
+  <p>&ldquo;手書き作家の職人技を尊重し、その中でAIを使う方法を探求する立場でやっている&rdquo;</p>
+</blockquote><h2 id="5-今後の展望">
+  5. 今後の展望
+  
+  <a class="anchor" href="#5-%e4%bb%8a%e5%be%8c%e3%81%ae%e5%b1%95%e6%9c%9b">#</a>
+  
+</h2>
+<ul>
+<li>AI生成物語の映像化・可視化に挑戦予定</li>
+<li>音声・映像を含む新しいエンターテインメント作品の制作を目指す</li>
+<li>継続的にComfy UIでの画像生成も実施</li>
+</ul>
+<hr>
+<p><strong>評価:</strong> この動画は、AIによる長編創作における技術的課題を、エンジニアリング的アプローチで解決した具体例として非常に参考になります。JSON管理による設定の一貫性維持は、法律文書の構造化管理にも応用できる考え方かもしれません。</p>
+</div>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+
+<aside class="book-toc">
+  <div class="book-toc-content">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#aiで長編小説は書けない設定崩壊を防ぎ感動まで生み出す小説エンジニアリングの手法を公開カクヨム投稿中">AIで長編小説は書けない？設定崩壊を防ぎ、感動まで生み出す「小説エンジニアリング」の手法を公開【カクヨム投稿中】</a></li>
+    <li><a href="#動画分析aiによる長編小説執筆手法">動画分析:AIによる長編小説執筆手法</a>
+      <ul>
+        <li><a href="#1-概要">1. 概要</a></li>
+        <li><a href="#2-主要なポイント">2. 主要なポイント</a>
+          <ul>
+            <li><a href="#wonderland-engineのシステム構造">Wonderland Engineのシステム構造</a></li>
+            <li><a href="#執筆プロセス3ステップ">執筆プロセス(3ステップ)</a></li>
+            <li><a href="#ai使い分け戦略">AI使い分け戦略</a></li>
+            <li><a href="#実績">実績</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-重要な洞察">3. 重要な洞察</a>
+          <ul>
+            <li><a href="#小説エンジニアリングというアプローチ">「小説エンジニアリング」というアプローチ</a></li>
+            <li><a href="#システム化の重要性">システム化の重要性</a></li>
+            <li><a href="#汎用性">汎用性</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-印象的な発言">4. 印象的な発言</a></li>
+        <li><a href="#5-今後の展望">5. 今後の展望</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </div>
+</aside>
+
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

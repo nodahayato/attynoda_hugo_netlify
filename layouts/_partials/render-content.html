@@ -1,0 +1,69 @@
+{{- $content := .Content -}}
+{{- $replacements := dict -}}
+{{- $tokenIndex := 0 -}}
+
+{{- /* 1. 埋め込み(![[...]]) を最優先でトークン化して保護する */ -}}
+{{- $embedMatches := findRE `!\[\[.+?\]\]` $content -}}
+{{- range $match := $embedMatches -}}
+    {{- $token := printf "@@@OBSIDIAN_EMBED_%d@@@" $tokenIndex -}}
+    {{- $tokenIndex = add $tokenIndex 1 -}}
+    
+    {{- $raw := replaceRE `^!\[\[(.*?)\]\]$` "$1" $match -}}
+    {{- $p := $.Site.GetPage $raw -}}
+    {{- if not $p -}}
+        {{- range $.Site.RegularPages -}}
+            {{- if or (eq .Title $raw) (eq .File.BaseFileName $raw) -}}
+                {{- $p = . -}}
+                {{- break -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+
+    {{- if $p -}}
+        {{- $content = replace $content $match $token 1 -}}
+        {{- $html := printf "<div class=\"obsidian-embed\"><div class=\"obsidian-embed-header\"><span class=\"obsidian-embed-title\">%s (埋め込み)</span><a href=\"%s\" class=\"obsidian-embed-link\">🔗 参照元を開く</a></div><div class=\"obsidian-embed-content\">%s</div></div>" $p.Title $p.RelPermalink $p.Content -}}
+        {{- $replacements = merge $replacements (dict $token $html) -}}
+    {{- end -}}
+{{- end -}}
+
+{{- /* 2. 内部リンク([[...]]) を次にトークン化する */ -}}
+{{- $linkMatches := findRE `\[\[.+?\]\]` $content -}}
+{{- range $match := $linkMatches -}}
+    {{- $token := printf "@@@OBSIDIAN_LINK_%d@@@" $tokenIndex -}}
+    {{- $tokenIndex = add $tokenIndex 1 -}}
+    
+    {{- $raw := replaceRE `^\[\[(.*?)\]\]$` "$1" $match -}}
+    {{- $parts := split $raw "|" -}}
+    {{- $path := index $parts 0 -}}
+    {{- $label := $path -}}
+    {{- if gt (len $parts) 1 -}}
+        {{- $label = index $parts 1 -}}
+    {{- end -}}
+
+    {{- $p := $.Site.GetPage $path -}}
+    {{- if not $p -}}
+        {{- range $.Site.RegularPages -}}
+            {{- if or (eq .Title $path) (eq .File.BaseFileName $path) -}}
+                {{- $p = . -}}
+                {{- break -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+
+    {{- $html := "" -}}
+    {{- if $p -}}
+        {{- $html = printf "<a href=\"%s\">%s</a>" $p.RelPermalink $label -}}
+    {{- else -}}
+        {{- $html = printf "<span class=\"broken-link\">%s</span>" $label -}}
+    {{- end -}}
+
+    {{- $content = replace $content $match $token 1 -}}
+    {{- $replacements = merge $replacements (dict $token $html) -}}
+{{- end -}}
+
+{{- /* 3. 最後にプレースホルダーを本物のHTMLに一括復元 */ -}}
+{{- range $token, $html := $replacements -}}
+    {{- $content = replace $content $token $html -}}
+{{- end -}}
+
+{{- $content | safeHTML -}}
