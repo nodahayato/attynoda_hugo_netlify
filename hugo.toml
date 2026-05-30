@@ -129,6 +129,13 @@ theme = 'hugo-book'
     parent = "categories"
 
   [[menu.before]]
+    identifier = "criminal-procedure-research"
+    name = "刑訴研究"
+    url = "/categories/刑訴研究/"
+    weight = 65
+    parent = "categories"
+
+  [[menu.before]]
     identifier = "misc"
     name = "雑記"
     url = "/categories/雑記/"
