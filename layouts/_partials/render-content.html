@@ -21,7 +21,8 @@
 
     {{- if $p -}}
         {{- $content = replace $content $match $token 1 -}}
-        {{- $html := printf "<div class=\"obsidian-embed\"><div class=\"obsidian-embed-header\"><span class=\"obsidian-embed-title\">%s (埋め込み)</span><a href=\"%s\" class=\"obsidian-embed-link\">🔗 参照元を開く</a></div><div class=\"obsidian-embed-content\">%s</div></div>" $p.Title $p.RelPermalink $p.Content -}}
+        {{- $embedContent := partial "render-content.html" $p -}}
+        {{- $html := printf "<div class=\"obsidian-embed\"><div class=\"obsidian-embed-header\"><span class=\"obsidian-embed-title\">%s (埋め込み)</span><a href=\"%s\" class=\"obsidian-embed-link\">🔗 参照元を開く</a></div><div class=\"obsidian-embed-content\">%s</div></div>" $p.Title $p.RelPermalink $embedContent -}}
         {{- $replacements = merge $replacements (dict $token $html) -}}
     {{- end -}}
 {{- end -}}
